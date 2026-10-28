@@ -40,12 +40,16 @@ jobs:
           uname -m
           sw_vers
           brew --version
+      - name: Trust only the four packages under test
+        run: |
+          brew trust --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+          brew trust --cask fclaude/tap/sqlite-explorer
       - name: Check formula and cask style
-        run: brew style --tap=fclaude/tap
+        run: brew style fclaude/tap
       - name: Audit package definitions
         run: |
           brew audit --strict --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-          brew audit --cask --online --no-signing fclaude/tap/sqlite-explorer
+          brew audit --cask --online fclaude/tap/sqlite-explorer
       - name: Build and test formulae
         run: |
           brew install --build-from-source fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot

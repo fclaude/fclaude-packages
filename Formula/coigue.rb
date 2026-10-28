@@ -15,7 +15,10 @@ class Coigue < Formula
   depends_on :macos
 
   def install
-    ldflags = "-s -w -X github.com/fclaude/coigue/internal/version.SourceCommit=d01df859582b26493c84c7419985e6ce2ff7898b"
+    ldflags = %w[
+      -s -w
+      -X github.com/fclaude/coigue/internal/version.SourceCommit=d01df859582b26493c84c7419985e6ce2ff7898b
+    ]
     system "go", "build", *std_go_args(ldflags:), "./cmd/coigue"
     doc.install "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md"
   end

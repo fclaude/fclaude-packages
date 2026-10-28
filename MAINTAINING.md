@@ -44,7 +44,7 @@ The formula archives are pinned to immutable commit identities and verified by S
 
 2. On a Mac, mount the downloaded DMG read-only with `hdiutil attach -readonly -nobrowse <dmg>`. Inspect its actual `.app` path and `Contents/Info.plist`; do not assume an app rename from the marketing name. Detach the returned mount point when finished. Confirm both `x86_64` and `arm64` with `lipo -info` and validate the signature with `codesign --verify --deep --strict <app>`.
 3. Update `version` and `sha256` in `Casks/sqlite-explorer.rb`; adjust the URL only if the upstream filename changes. Verify the minimum macOS requirement, app path, bundle identifier, and license. Update CI assertions and the README version table if those change.
-4. Keep the unsigned/notarization caveat accurate. Only remove it once the published artifact has Developer ID signing and notarization. Do not disable quarantine or add Gatekeeper bypasses. The CI cask audit uses `--no-signing` because the current release is unnotarized; the separate `codesign` check verifies the integrity of its ad-hoc signature.
+4. Keep the unsigned/notarization caveat accurate. Only remove it once the published artifact has Developer ID signing and notarization. Do not disable quarantine or add Gatekeeper bypasses. The separate `codesign` check verifies the integrity of the ad-hoc signature; it does not establish Developer ID identity or notarization.
 5. Run both Mac CI jobs before publishing an update. The workflow checks installation, bundle metadata, executable architecture, signature integrity, license, and uninstall. GUI behavior and Gatekeeper acceptance still require manual testing on a Mac.
 
 ## Local validation on macOS
@@ -52,9 +52,11 @@ The formula archives are pinned to immutable commit identities and verified by S
 With a development checkout tapped as `fclaude/tap`:
 
 ```sh
-brew style --tap=fclaude/tap
+brew trust --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+brew trust --cask fclaude/tap/sqlite-explorer
+brew style fclaude/tap
 brew audit --strict --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew audit --cask --online --no-signing fclaude/tap/sqlite-explorer
+brew audit --cask --online fclaude/tap/sqlite-explorer
 brew install --build-from-source fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
 brew test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
 brew linkage --test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
@@ -63,6 +65,8 @@ brew install --cask fclaude/tap/sqlite-explorer
 ```
 
 For already installed packages, use `brew reinstall --build-from-source <formula>` or `brew reinstall --cask <cask>` to test the changed definition. The pseudo-terminal checks use temporary homes and files; Hoot never starts an agent in these tests.
+
+Homebrew 6 requires explicit trust before commands such as audit load third-party package definitions. CI trusts only the four packages under test. Fully qualified `brew install` commands grant the named package trust automatically; users do not need to trust the whole tap.
 
 The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a read-only `GITHUB_TOKEN`. Pushes to `main`, pull requests and manual dispatch run validation. It does not publish bottles, update upstream repositories, create credentials, or collect telemetry. Use `brew livecheck --tap=fclaude/tap` to inspect newer releases when maintaining the tap; no scheduled updater is configured.
 
