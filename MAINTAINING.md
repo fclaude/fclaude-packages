@@ -49,26 +49,26 @@ The formula archives are pinned to immutable commit identities and verified by S
 
 ## Local validation on macOS
 
-With a development checkout tapped as `fclaude/tap`:
+With a development checkout tapped as `fclaude/fclaude-packages`:
 
 ```sh
-brew trust --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew trust --cask fclaude/tap/sqlite-explorer
-brew style fclaude/tap
-brew audit --strict --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew audit --cask --online fclaude/tap/sqlite-explorer
-brew install --build-from-source fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew linkage --test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew trust --cask fclaude/fclaude-packages/sqlite-explorer
+brew style fclaude/fclaude-packages
+brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
+brew install --build-from-source fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 python3 scripts/pty-smoke.py
-brew install --cask fclaude/tap/sqlite-explorer
+brew install --cask fclaude/fclaude-packages/sqlite-explorer
 ```
 
 For already installed packages, use `brew reinstall --build-from-source <formula>` or `brew reinstall --cask <cask>` to test the changed definition. The pseudo-terminal checks use temporary homes and files; Hoot never starts an agent in these tests.
 
 Homebrew 6 requires explicit trust before commands such as audit load third-party package definitions. CI trusts only the four packages under test. Fully qualified `brew install` commands grant the named package trust automatically; users do not need to trust the whole tap.
 
-The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a read-only `GITHUB_TOKEN`. Pushes to `main`, pull requests and manual dispatch run validation. It does not publish bottles, update upstream repositories, create credentials, or collect telemetry. Use `brew livecheck --tap=fclaude/tap` to inspect newer releases when maintaining the tap; no scheduled updater is configured.
+The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a read-only `GITHUB_TOKEN`. Pushes to `main`, pull requests and manual dispatch run validation. It does not publish bottles, update upstream repositories, create credentials, or collect telemetry. Use `brew livecheck --tap=fclaude/fclaude-packages` to inspect newer releases when maintaining the tap; no scheduled updater is configured.
 
 ## Current source identities
 

@@ -1,8 +1,8 @@
-# Francisco's Homebrew tap
+# Francisco's packages
 
-[![Validate tap](https://github.com/fclaude/homebrew-tap/actions/workflows/validate.yml/badge.svg)](https://github.com/fclaude/homebrew-tap/actions/workflows/validate.yml)
+[![Validate packages](https://github.com/fclaude/fclaude-packages/actions/workflows/validate.yml/badge.svg)](https://github.com/fclaude/fclaude-packages/actions/workflows/validate.yml)
 
-Install my tools on macOS with [Homebrew](https://brew.sh). This tap supports native Intel and Apple Silicon installations.
+Install my tools on macOS with [Homebrew](https://brew.sh). This repository also holds Fedora RPM and Ubuntu DEB packaging. Homebrew supports native Intel and Apple Silicon installations.
 
 | Package | Version | What it installs |
 | --- | --- | --- |
@@ -14,12 +14,12 @@ Install my tools on macOS with [Homebrew](https://brew.sh). This tap supports na
 ## Install
 
 ```sh
-brew tap fclaude/tap
-brew install fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew install --cask fclaude/tap/sqlite-explorer
+brew tap fclaude/fclaude-packages https://github.com/fclaude/fclaude-packages.git
+brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew install --cask fclaude/fclaude-packages/sqlite-explorer
 ```
 
-Each command can also be used independently. Fully qualified package names automatically add the tap when needed.
+Run the `brew tap` command first: this repository has a neutral name, so Homebrew needs its explicit Git URL. Then install whichever packages you need with the fully qualified names above.
 
 The three command-line tools build from pinned source archives. Homebrew installs Go or Rust as needed; initial installation takes longer than downloading a prebuilt binary. This tap does not publish bottles yet. Use a macOS release supported by Homebrew and its build tools. SQLite Explorer itself requires macOS 12 or newer.
 
@@ -39,16 +39,16 @@ SQLite Explorer 0.2.1 is ad-hoc signed and is not notarized by Apple. macOS Gate
 ```sh
 brew update
 brew outdated
-brew upgrade fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew upgrade --cask fclaude/tap/sqlite-explorer
+brew upgrade fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew upgrade --cask fclaude/fclaude-packages/sqlite-explorer
 ```
 
 ## Uninstall
 
 ```sh
-brew uninstall fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-brew uninstall --cask fclaude/tap/sqlite-explorer
-brew untap fclaude/tap
+brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer
+brew untap fclaude/fclaude-packages
 ```
 
 Only uninstall the packages you installed. Uninstalling does not delete your documents, databases, or application preferences.
@@ -59,7 +59,7 @@ See [MAINTAINING.md](MAINTAINING.md) for release updates, checksum verification,
 
 ## Adoption signals
 
-[Homebrew's public aggregate reports](https://formulae.brew.sh/analytics/) and [analytics API](https://formulae.brew.sh/docs/api/) can provide install trends for public third-party taps; look for `fclaude/tap/` entries. Results depend on users' analytics settings and report publication. GitHub's release asset download counts provide another signal, especially for SQLite Explorer's DMG. Source archive installs do not increment the CLI release-binary asset counters.
+[Homebrew's public aggregate reports](https://formulae.brew.sh/analytics/) and [analytics API](https://formulae.brew.sh/docs/api/) can provide install trends for public third-party taps; look for `fclaude/fclaude-packages/` entries. Results depend on users' analytics settings and report publication. GitHub's release asset download counts provide another signal, especially for SQLite Explorer's DMG. Source archive installs do not increment the CLI release-binary asset counters.
 
 These counts represent events, not unique people or active users. This tap adds no application telemetry. Its CI sets `HOMEBREW_NO_ANALYTICS=1` so validation does not contribute Homebrew install events.
 

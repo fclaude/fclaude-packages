@@ -26,7 +26,7 @@ class Coigue < Formula
   def caveats
     <<~EOS
       Language servers are optional. For Scheme language support:
-        brew install fclaude/tap/brote
+        brew install fclaude/fclaude-packages/brote
       Brote's interpreter is embedded in Coigüe; a separate interpreter
       installation is only needed for standalone use or brote-lsp.
     EOS

@@ -1,4 +1,4 @@
-name: Validate tap
+name: Validate packages
 
 on:
   push:
@@ -31,10 +31,18 @@ jobs:
       HOMEBREW_NO_INSTALL_CLEANUP: "1"
       HOMEBREW_NO_AUTO_UPDATE: "1"
     steps:
-      - name: Set up Homebrew and check out this tap
+      - name: Check out packages
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@ae72030040bc05e2d65c41c577092cb98bc0a27e
         with:
           stable: true
+      - name: Register this exact checkout as a tap
+        run: |
+          mkdir -p "$(brew --repository)/Library/Taps/fclaude"
+          ln -s "$GITHUB_WORKSPACE" "$(brew --repository)/Library/Taps/fclaude/homebrew-fclaude-packages"
       - name: Show platform
         run: |
           uname -m
@@ -42,34 +50,34 @@ jobs:
           brew --version
       - name: Trust only the four packages under test
         run: |
-          brew trust --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-          brew trust --cask fclaude/tap/sqlite-explorer
+          brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew trust --cask fclaude/fclaude-packages/sqlite-explorer
       - name: Check formula and cask style
-        run: brew style fclaude/tap
+        run: brew style fclaude/fclaude-packages
       - name: Audit package definitions
         run: |
-          brew audit --strict --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-          brew audit --cask --online fclaude/tap/sqlite-explorer
+          brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
       - name: Build and test formulae
         run: |
-          brew install --build-from-source fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-          brew test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
-          brew linkage --test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+          brew install --build-from-source fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
       - name: Exercise terminal applications
-        run: /usr/bin/python3 "$(brew --repository fclaude/tap)/scripts/pty-smoke.py"
+        run: /usr/bin/python3 "$(brew --repository fclaude/fclaude-packages)/scripts/pty-smoke.py"
       - name: Install and verify SQLite Explorer
         run: |
-          brew install --cask fclaude/tap/sqlite-explorer
+          brew install --cask fclaude/fclaude-packages/sqlite-explorer
           app=/Applications/sqlite-explorer.app
           test -x "$app/Contents/MacOS/sqlite-explorer"
           test -f "$app/Contents/Resources/LICENSE"
           plutil -lint "$app/Contents/Info.plist"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" = cl.recoded.sqlite-explorer
           test "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$app/Contents/Info.plist")" = 12.0
-          lipo -verify_arch x86_64 arm64 "$app/Contents/MacOS/sqlite-explorer"
+          lipo "$app/Contents/MacOS/sqlite-explorer" -verify_arch x86_64 arm64
           codesign --verify --deep --strict "$app"
       - name: Check uninstall
         run: |
-          brew uninstall --cask fclaude/tap/sqlite-explorer
+          brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer
           test ! -e /Applications/sqlite-explorer.app
-          brew uninstall fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+          brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
