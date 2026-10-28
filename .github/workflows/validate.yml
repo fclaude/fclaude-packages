@@ -53,6 +53,8 @@ jobs:
           brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
           brew trust --cask fclaude/fclaude-packages/sqlite-explorer
       - name: Check formula and cask style
+        # shfmt has no Intel macOS bottle; lint shared files once on Apple Silicon.
+        if: matrix.arch == 'Apple Silicon'
         run: brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
       - name: Audit package definitions
         run: |
