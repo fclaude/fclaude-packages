@@ -1,0 +1,71 @@
+name: Validate tap
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    name: macOS (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            arch: Apple Silicon
+          - os: macos-15-intel
+            arch: Intel
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      HOMEBREW_NO_ANALYTICS: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+    steps:
+      - name: Set up Homebrew and check out this tap
+        uses: Homebrew/actions/setup-homebrew@ae72030040bc05e2d65c41c577092cb98bc0a27e
+        with:
+          stable: true
+      - name: Show platform
+        run: |
+          uname -m
+          sw_vers
+          brew --version
+      - name: Check formula and cask style
+        run: brew style --tap=fclaude/tap
+      - name: Audit package definitions
+        run: |
+          brew audit --strict --formula fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+          brew audit --cask --online --no-signing fclaude/tap/sqlite-explorer
+      - name: Build and test formulae
+        run: |
+          brew install --build-from-source fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+          brew test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+          brew linkage --test fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
+      - name: Exercise terminal applications
+        run: /usr/bin/python3 "$(brew --repository fclaude/tap)/scripts/pty-smoke.py"
+      - name: Install and verify SQLite Explorer
+        run: |
+          brew install --cask fclaude/tap/sqlite-explorer
+          app=/Applications/sqlite-explorer.app
+          test -x "$app/Contents/MacOS/sqlite-explorer"
+          test -f "$app/Contents/Resources/LICENSE"
+          plutil -lint "$app/Contents/Info.plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" = cl.recoded.sqlite-explorer
+          test "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$app/Contents/Info.plist")" = 12.0
+          lipo -verify_arch x86_64 arm64 "$app/Contents/MacOS/sqlite-explorer"
+          codesign --verify --deep --strict "$app"
+      - name: Check uninstall
+        run: |
+          brew uninstall --cask fclaude/tap/sqlite-explorer
+          test ! -e /Applications/sqlite-explorer.app
+          brew uninstall fclaude/tap/brote fclaude/tap/coigue fclaude/tap/hoot
