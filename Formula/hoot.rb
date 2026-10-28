@@ -1,22 +1,27 @@
 class Hoot < Formula
   desc "Terminal UI for reviewing Git changes alongside a coding agent"
   homepage "https://github.com/fclaude/hoot"
-  url "https://github.com/fclaude/hoot/archive/7eee895dfc12cd84e23166b0363770f5590239ef.tar.gz"
-  version "0.1.2"
-  sha256 "c2cc8afab285eeba55e0da5e0ea86a23cee9942d99ce95a4f0312b09ce46ac69"
+  if Hardware::CPU.arm?
+    url "https://github.com/fclaude/hoot/releases/download/v0.1.2/hoot-v0.1.2-aarch64-apple-darwin.tar.gz"
+    sha256 "ee39e89a5af72d60f1becf2e7882ef82cc82e5d9ded7e9a1626eb27e2d482c87"
+  else
+    url "https://github.com/fclaude/hoot/releases/download/v0.1.2/hoot-v0.1.2-x86_64-apple-darwin.tar.gz"
+    sha256 "72f98ffc9496171a979fcad57654711cb51a1d4b282ef9e2cd95c13afb6a9150"
+  end
   license "MIT"
+  revision 1
 
   livecheck do
-    url "https://github.com/fclaude/hoot/releases/latest"
+    url :stable
     strategy :github_latest
   end
 
-  depends_on "rust" => :build
-  depends_on "git"
   depends_on :macos
 
+  uses_from_macos "git"
+
   def install
-    system "cargo", "install", *std_cargo_args
+    bin.install "hoot"
     doc.install "README.md", "KEYBINDINGS.md", "LICENSE"
   end
 

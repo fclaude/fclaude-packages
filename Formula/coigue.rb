@@ -1,26 +1,26 @@
 class Coigue < Formula
   desc "Small modal terminal editor with Scheme extensions"
   homepage "https://github.com/fclaude/coigue"
-  url "https://github.com/fclaude/coigue/archive/d01df859582b26493c84c7419985e6ce2ff7898b.tar.gz"
-  version "0.2.3"
-  sha256 "8538ff6e4a550548e4a8207a2277744d3936c656b4f489752a8165719e58819c"
+  if Hardware::CPU.arm?
+    url "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue_0.2.3_darwin_arm64.tar.gz"
+    sha256 "b916fe12324a8559dce915f7b75d9e656fcb3c73d6756f7640b1d5210faa9a64"
+  else
+    url "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue_0.2.3_darwin_amd64.tar.gz"
+    sha256 "64a2e42905c35c4205dc05b3a0f806bcdc2215583f5537345ff8e1456484ee60"
+  end
   license "MIT"
+  revision 1
 
   livecheck do
-    url "https://github.com/fclaude/coigue/releases/latest"
+    url :stable
     strategy :github_latest
   end
 
-  depends_on "go" => :build
   depends_on :macos
 
   def install
-    ldflags = %w[
-      -s -w
-      -X github.com/fclaude/coigue/internal/version.SourceCommit=d01df859582b26493c84c7419985e6ce2ff7898b
-    ]
-    system "go", "build", *std_go_args(ldflags:), "./cmd/coigue"
-    doc.install "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md"
+    bin.install "coigue"
+    doc.install "LICENSE", "THIRD_PARTY_NOTICES.md"
   end
 
   def caveats

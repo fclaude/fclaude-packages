@@ -21,7 +21,7 @@ brew install --cask fclaude/fclaude-packages/sqlite-explorer
 
 Run the `brew tap` command first: this repository has a neutral name, so Homebrew needs its explicit Git URL. Then install whichever packages you need with the fully qualified names above.
 
-The three command-line tools build from pinned source archives. Homebrew installs Go or Rust as needed; initial installation takes longer than downloading a prebuilt binary. This tap does not publish bottles yet. Use a macOS release supported by Homebrew and its build tools. SQLite Explorer itself requires macOS 12 or newer.
+The three command-line tools install verified upstream release binaries for your Mac architecture. Installing them requires no Go or Rust compiler. Hoot uses the Git available on your PATH, including the Git supplied by Apple’s command-line tools; it does not force a Homebrew Git upgrade. Use a macOS release supported by Homebrew. SQLite Explorer itself requires macOS 12 or newer.
 
 ```sh
 brote -e '(+ 20 22)'
@@ -30,7 +30,7 @@ hoot --demo
 open -a /Applications/sqlite-explorer.app
 ```
 
-Coigüe embeds the Brote interpreter. Install the separate Brote package for standalone Scheme use or its optional language server. Other language servers are optional. Hoot installs Git as a dependency; its agent features need a separately installed `opencode` or `pi`.
+Coigüe embeds the Brote interpreter. Install the separate Brote package for standalone Scheme use or its optional language server. Other language servers are optional. Hoot needs Git at runtime; its agent features need a separately installed `opencode` or `pi`.
 
 SQLite Explorer 0.2.1 is ad-hoc signed and is not notarized by Apple. macOS Gatekeeper may block its first launch. See the project's [signing notes](https://github.com/fclaude/sqlite-explorer/blob/v0.2.1/docs/RELEASING.md#macos-signing). The cask preserves Homebrew's normal quarantine behavior.
 
@@ -55,11 +55,11 @@ Only uninstall the packages you installed. Uninstalling does not delete your doc
 
 ## Maintenance and validation
 
-See [MAINTAINING.md](MAINTAINING.md) for release updates, checksum verification, local checks, and the CI coverage. CI builds and tests both Mac architectures, exercises Coigüe and Hoot in real pseudo-terminals, and checks the universal SQLite Explorer bundle. It does not launch the GUI or prove Gatekeeper acceptance.
+See [MAINTAINING.md](MAINTAINING.md) for release updates, checksum verification, local checks, and the CI coverage. CI installs and tests both Mac architectures, exercises Coigüe and Hoot in real pseudo-terminals, and checks the universal SQLite Explorer bundle. It does not launch the GUI or prove Gatekeeper acceptance.
 
 ## Adoption signals
 
-[Homebrew's public aggregate reports](https://formulae.brew.sh/analytics/) and [analytics API](https://formulae.brew.sh/docs/api/) can provide install trends for public third-party taps; look for `fclaude/fclaude-packages/` entries. Results depend on users' analytics settings and report publication. GitHub's release asset download counts provide another signal, especially for SQLite Explorer's DMG. Source archive installs do not increment the CLI release-binary asset counters.
+[Homebrew's public aggregate reports](https://formulae.brew.sh/analytics/) and [analytics API](https://formulae.brew.sh/docs/api/) can provide install trends for public third-party taps; look for `fclaude/fclaude-packages/` entries. Results depend on users' analytics settings and report publication. GitHub's release asset download counts provide another signal, especially for SQLite Explorer's DMG. CLI installs download the upstream release assets, so those download counters include Homebrew installs.
 
 These counts represent events, not unique people or active users. This tap adds no application telemetry. Its CI sets `HOMEBREW_NO_ANALYTICS=1` so validation does not contribute Homebrew install events.
 

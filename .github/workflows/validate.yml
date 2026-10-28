@@ -58,9 +58,13 @@ jobs:
         run: |
           brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
           brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
-      - name: Build and test formulae
+      - name: Install and test released binaries
         run: |
-          brew install --build-from-source fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          test -z "$(brew deps --include-build fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot)"
+          brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          for command in brote brote-lsp coigue hoot; do
+            lipo "$(command -v "$command")" -verify_arch "$(uname -m)"
+          done
           brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
           brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
       - name: Exercise terminal applications
