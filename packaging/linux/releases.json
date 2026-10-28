@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "assets": [
+    {
+      "package": "brote",
+      "version": "0.3.0",
+      "arch": "amd64",
+      "format": "tar.gz",
+      "url": "https://github.com/fclaude/brote/releases/download/v0.3.0/brote_0.3.0_linux_amd64.tar.gz",
+      "sha256": "fbef00c9dcf3aecb94c2fd176d162fff3c6c04edc424c00e72d43ea2d4f43fad"
+    },
+    {
+      "package": "brote",
+      "version": "0.3.0",
+      "arch": "arm64",
+      "format": "tar.gz",
+      "url": "https://github.com/fclaude/brote/releases/download/v0.3.0/brote_0.3.0_linux_arm64.tar.gz",
+      "sha256": "488a46b237bd6d578072f7160952ad4908ac7c3768dd13f52200ebcd99d25df7"
+    },
+    {
+      "package": "coigue",
+      "version": "0.2.3",
+      "arch": "arm64",
+      "format": "rpm",
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue-0.2.3-1.aarch64.rpm",
+      "sha256": "675125586c8e652b94532e8f036ea4b6d6235025670141282c3c6dd82bd7024c"
+    },
+    {
+      "package": "coigue",
+      "version": "0.2.3",
+      "arch": "amd64",
+      "format": "rpm",
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue-0.2.3-1.x86_64.rpm",
+      "sha256": "9932b475289af3140ce8a84b6e36fe66c7f7ad1c97eddd51de1c7aa409d60d61"
+    },
+    {
+      "package": "coigue",
+      "version": "0.2.3",
+      "arch": "amd64",
+      "format": "deb",
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue_0.2.3_linux_amd64.deb",
+      "sha256": "2261f3e6065db75c786835b46e09c37ce96d1299ca98ff3543a200db32888dd6"
+    },
+    {
+      "package": "coigue",
+      "version": "0.2.3",
+      "arch": "arm64",
+      "format": "deb",
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue_0.2.3_linux_arm64.deb",
+      "sha256": "1f11df41973671e37139395bfd82aa46a055fd7b23ae052a645874f4378e9929"
+    },
+    {
+      "package": "hoot",
+      "version": "0.1.2",
+      "arch": "arm64",
+      "format": "rpm",
+      "url": "https://github.com/fclaude/hoot/releases/download/v0.1.2/hoot-0.1.2-1.aarch64.rpm",
+      "sha256": "995583f19d2e2b0940fd19f39723c7c261596c1e5fbf2beede7883653e9223a1"
+    },
+    {
+      "package": "hoot",
+      "version": "0.1.2",
+      "arch": "amd64",
+      "format": "rpm",
+      "url": "https://github.com/fclaude/hoot/releases/download/v0.1.2/hoot-0.1.2-1.x86_64.rpm",
+      "sha256": "eefd71c96e776a71409ef6addf11ef7d597640d01ea26c91b2435ee77ceea5b5"
+    },
+    {
+      "package": "hoot",
+      "version": "0.1.2",
+      "arch": "amd64",
+      "format": "deb",
+      "url": "https://github.com/fclaude/hoot/releases/download/v0.1.2/hoot_0.1.2-1_amd64.deb",
+      "sha256": "0d6d07475b0ae3b52529041019e9954fd77e9a9596fde0fcd25b89bfbd702031"
+    },
+    {
+      "package": "hoot",
+      "version": "0.1.2",
+      "arch": "arm64",
+      "format": "deb",
+      "url": "https://github.com/fclaude/hoot/releases/download/v0.1.2/hoot_0.1.2-1_arm64.deb",
+      "sha256": "addd3431c7700d06a5e431279d3f33b9e89e0cee94b55e3d6f2418b18e4bbe4b"
+    },
+    {
+      "package": "sqlite-explorer",
+      "version": "0.2.1",
+      "arch": "amd64",
+      "format": "rpm",
+      "url": "https://github.com/fclaude/sqlite-explorer/releases/download/v0.2.1/sqlite-explorer-0.2.1-1.x86_64.rpm",
+      "sha256": "6f2feb1aa507dee28d0b94345fde3d3ba51f3a867b8daea977e435e65cc8afec"
+    },
+    {
+      "package": "sqlite-explorer",
+      "version": "0.2.1",
+      "arch": "amd64",
+      "format": "deb",
+      "url": "https://github.com/fclaude/sqlite-explorer/releases/download/v0.2.1/sqlite-explorer_0.2.1_amd64.deb",
+      "sha256": "d1260a244e79acd1755e98096a43fca6a7194cef294aa9d7f0d0ae4eaa5cfd4b"
+    }
+  ]
+}

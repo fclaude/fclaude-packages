@@ -53,7 +53,7 @@ jobs:
           brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
           brew trust --cask fclaude/fclaude-packages/sqlite-explorer
       - name: Check formula and cask style
-        run: brew style fclaude/fclaude-packages
+        run: brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
       - name: Audit package definitions
         run: |
           brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
@@ -85,3 +85,44 @@ jobs:
           brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer
           test ! -e /Applications/sqlite-explorer.app
           brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+
+  linux:
+    name: Linux (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            arch: amd64
+          - os: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      PACKAGE_ARCH: ${{ matrix.arch }}
+    steps:
+      - name: Check out packages
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify upstream assets and build Brote packages
+        run: python3 scripts/build-linux.py --arch "$PACKAGE_ARCH"
+      - name: Test Ubuntu 24.04 install, behavior, and uninstall
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -v "$GITHUB_WORKSPACE/dist/linux/$PACKAGE_ARCH:/packages:ro" \
+            ubuntu:24.04 bash /workspace/scripts/test-linux.sh deb "$PACKAGE_ARCH"
+      - name: Test Fedora 44 install, behavior, and uninstall
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -v "$GITHUB_WORKSPACE/dist/linux/$PACKAGE_ARCH:/packages:ro" \
+            fedora:44 bash /workspace/scripts/test-linux.sh rpm "$PACKAGE_ARCH"
+      - name: Upload verified downloadable packages
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: linux-${{ matrix.arch }}
+          path: dist/linux/${{ matrix.arch }}/
+          if-no-files-found: error
+          retention-days: 30

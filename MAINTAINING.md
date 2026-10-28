@@ -38,12 +38,12 @@ Keep packaging changes in this repository. Publish and validate an upstream rele
 
 ## Local validation on macOS
 
-With a development checkout tapped as `fclaude/fclaude-packages`:
+From this repository checkout, tapped as `fclaude/fclaude-packages`:
 
 ```sh
 brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 brew trust --cask fclaude/fclaude-packages/sqlite-explorer
-brew style fclaude/fclaude-packages
+brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
 brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
 brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
@@ -58,3 +58,33 @@ For already installed packages, use `brew reinstall <formula>` or `brew reinstal
 Homebrew 6 requires explicit trust before commands such as audit load third-party package definitions. CI trusts only the four packages under test. Fully qualified `brew install` commands grant the named package trust automatically; users do not need to trust the whole tap.
 
 The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a read-only `GITHUB_TOKEN`. Pushes to `main`, pull requests and manual dispatch run validation. It does not publish bottles, update upstream repositories, create credentials, or collect telemetry. Use `brew livecheck --tap=fclaude/fclaude-packages` to inspect newer releases when maintaining the tap; no scheduled updater is configured.
+
+## Linux packages
+
+`packaging/linux/releases.json` pins versioned upstream assets and SHA256 checksums. Keep Coigüe, Hoot and SQLite Explorer DEB/RPM files unchanged; Brote is packaged from its static Linux tarballs using `packaging/brote/nfpm.yaml`. The build script downloads a pinned, checksum-verified nFPM 2.48.0 binary into the ignored local cache. No system installation, signing key, or external hosting account is needed.
+
+Run on Linux with Python 3.11 or newer:
+
+```sh
+python3 scripts/build-linux.py --arch amd64
+python3 scripts/build-linux.py --arch arm64
+```
+
+Output is `dist/linux/<arch>/{deb,rpm}/` plus `SHA256SUMS-linux-<arch>`. Brote includes both commands and its MIT license. File metadata uses a fixed source date for package builds. SQLite Explorer is omitted on ARM64 because no upstream package exists.
+
+For an update, verify the upstream `SHA256SUMS` and GitHub asset digests against actual downloaded files, update the manifest URLs/checksums/versions, and review the package metadata, dependencies, architecture and installed license paths. Never silently accept changed bytes under an old release. A packaging-only Brote update also needs an incremented `release` in the nFPM recipe and corresponding output filenames in the build script. Update the README package-set tag when publishing a new set.
+
+CI uses native Ubuntu amd64 and ARM64 runners. Each creates that architecture's packages, then tests install, CLI behavior, terminal restoration, and uninstall in Ubuntu 24.04 and Fedora 44 containers. The amd64 jobs additionally validate SQLite Explorer's desktop entry, license and shared-library resolution; they do not launch its GUI. Ubuntu container tests explicitly retain package documentation, which minimal Ubuntu images otherwise exclude. The same tests can be run locally:
+
+```sh
+docker run --rm -v "$PWD:/workspace:ro" -v "$PWD/dist/linux/amd64:/packages:ro" \
+  ubuntu:24.04 bash /workspace/scripts/test-linux.sh deb amd64
+docker run --rm -v "$PWD:/workspace:ro" -v "$PWD/dist/linux/amd64:/packages:ro" \
+  fedora:44 bash /workspace/scripts/test-linux.sh rpm amd64
+```
+
+Use a native ARM64 Docker host and change the mounted output path and final argument to `arm64` to repeat on ARM64. Do not treat metadata inspection or emulation alone as proof of a native install.
+
+Successful CI uploads `linux-amd64` and `linux-arm64` artifacts. For a GitHub release, download the artifacts from the successful run for the exact reviewed commit, preserve the package bytes, and attach all DEB/RPM files and both checksum manifests. Tag the package set (for example `packages-2026-10-28`) at that commit and include the component versions and tested distributions in its release notes. Existing authenticated `gh` can publish it; the validation workflow has read-only repository permissions and never publishes on its own.
+
+Hosting signed APT/DNF repositories, adding signing keys, and configuring external accounts are separate work. Public GitHub releases provide downloadable local packages without those services.

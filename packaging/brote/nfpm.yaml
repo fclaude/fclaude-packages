@@ -1,0 +1,24 @@
+name: brote
+arch: ${PACKAGE_ARCH}
+platform: linux
+version: ${BROTE_VERSION}
+release: 1
+maintainer: Francisco Claude-Faust <fclaude@recoded.cl>
+description: Small Scheme interpreter and language server
+homepage: https://github.com/fclaude/brote
+license: MIT
+section: interpreters
+priority: optional
+contents:
+  - src: ${BROTE_STAGE}/brote
+    dst: /usr/bin/brote
+    file_info:
+      mode: 0755
+  - src: ${BROTE_STAGE}/brote-lsp
+    dst: /usr/bin/brote-lsp
+    file_info:
+      mode: 0755
+  - src: ${BROTE_STAGE}/LICENSE
+    dst: /usr/share/doc/brote/copyright
+    file_info:
+      mode: 0644
