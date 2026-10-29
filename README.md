@@ -63,7 +63,7 @@ Download the matching `.deb` files and checksum manifest from [GitHub Releases](
 
 ```sh
 arch=$(dpkg --print-architecture)
-gh release download packages-2026-10-29 --repo fclaude/fclaude-packages \
+gh release download packages-2026-10-29-2 --repo fclaude/fclaude-packages \
   --pattern "*${arch}.deb" --pattern "SHA256SUMS-linux-${arch}"
 sha256sum --check --ignore-missing "SHA256SUMS-linux-${arch}"
 sudo apt install ./*.deb
@@ -88,7 +88,7 @@ Download the matching `.rpm` files and checksum manifest from [GitHub Releases](
 ```sh
 arch=$(uname -m)
 if [ "$arch" = aarch64 ]; then checksum_arch=arm64; else checksum_arch=amd64; fi
-gh release download packages-2026-10-29 --repo fclaude/fclaude-packages \
+gh release download packages-2026-10-29-2 --repo fclaude/fclaude-packages \
   --pattern "*.${arch}.rpm" --pattern "SHA256SUMS-linux-${checksum_arch}"
 sha256sum --check --ignore-missing "SHA256SUMS-linux-${checksum_arch}"
 sudo dnf install ./*.rpm
