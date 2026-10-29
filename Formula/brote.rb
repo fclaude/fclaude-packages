@@ -2,11 +2,11 @@ class Brote < Formula
   desc "Small embeddable Scheme interpreter and language server"
   homepage "https://github.com/fclaude/brote"
   if Hardware::CPU.arm?
-    url "https://github.com/fclaude/brote/releases/download/v0.5.0/brote_0.5.0_darwin_arm64.tar.gz"
-    sha256 "1ea4bd0407d06a234dca600ef62575f237ddd2e1ec34b4e6ccd5353d84dc2c11"
+    url "https://github.com/fclaude/brote/releases/download/v0.8.0/brote_0.8.0_darwin_arm64.tar.gz"
+    sha256 "d27359c8f50cc2003804eb38b1f37e98bbb0fb8b3fc0d577027972dd7e92d993"
   else
-    url "https://github.com/fclaude/brote/releases/download/v0.5.0/brote_0.5.0_darwin_amd64.tar.gz"
-    sha256 "a1c402664b34b59b470abdf297600b1701fb929dbb10b7f925c9ba85210c044e"
+    url "https://github.com/fclaude/brote/releases/download/v0.8.0/brote_0.8.0_darwin_amd64.tar.gz"
+    sha256 "e04403731f52f4ffc6111f3a2d62d111cd12c6b5cadb4ce9c4c6c811ee7b2446"
   end
   license "MIT"
 
