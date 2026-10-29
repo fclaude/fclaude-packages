@@ -3,51 +3,51 @@
   "assets": [
     {
       "package": "brote",
-      "version": "0.3.0",
+      "version": "0.5.0",
       "arch": "amd64",
       "format": "tar.gz",
-      "url": "https://github.com/fclaude/brote/releases/download/v0.3.0/brote_0.3.0_linux_amd64.tar.gz",
-      "sha256": "fbef00c9dcf3aecb94c2fd176d162fff3c6c04edc424c00e72d43ea2d4f43fad"
+      "url": "https://github.com/fclaude/brote/releases/download/v0.5.0/brote_0.5.0_linux_amd64.tar.gz",
+      "sha256": "0cc0941f566e3ef82fc6670b82f142ccf1a178689d9819edf55755ba88eec625"
     },
     {
       "package": "brote",
-      "version": "0.3.0",
+      "version": "0.5.0",
       "arch": "arm64",
       "format": "tar.gz",
-      "url": "https://github.com/fclaude/brote/releases/download/v0.3.0/brote_0.3.0_linux_arm64.tar.gz",
-      "sha256": "488a46b237bd6d578072f7160952ad4908ac7c3768dd13f52200ebcd99d25df7"
+      "url": "https://github.com/fclaude/brote/releases/download/v0.5.0/brote_0.5.0_linux_arm64.tar.gz",
+      "sha256": "1f0f4cd77f9e4ced245526bd7307f3b619b2fe35506d7c7509b5103fb716642b"
     },
     {
       "package": "coigue",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "arch": "arm64",
       "format": "rpm",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue-0.2.3-1.aarch64.rpm",
-      "sha256": "675125586c8e652b94532e8f036ea4b6d6235025670141282c3c6dd82bd7024c"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.3.0/coigue-0.3.0-1.aarch64.rpm",
+      "sha256": "21c9421db70fdd30279988713f850106807982c09f2a8af0bb5884834d6048b2"
     },
     {
       "package": "coigue",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "arch": "amd64",
       "format": "rpm",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue-0.2.3-1.x86_64.rpm",
-      "sha256": "9932b475289af3140ce8a84b6e36fe66c7f7ad1c97eddd51de1c7aa409d60d61"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.3.0/coigue-0.3.0-1.x86_64.rpm",
+      "sha256": "4639ac21ab906bf09f3fd97f91da04e5ac45a6f9ba296170abfd7009773a097e"
     },
     {
       "package": "coigue",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "arch": "amd64",
       "format": "deb",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue_0.2.3_linux_amd64.deb",
-      "sha256": "2261f3e6065db75c786835b46e09c37ce96d1299ca98ff3543a200db32888dd6"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.3.0/coigue_0.3.0_linux_amd64.deb",
+      "sha256": "ad186a09e131de3cdea5732d231d88a03abd311bd7f4897a301c457617be6e3e"
     },
     {
       "package": "coigue",
-      "version": "0.2.3",
+      "version": "0.3.0",
       "arch": "arm64",
       "format": "deb",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.2.3/coigue_0.2.3_linux_arm64.deb",
-      "sha256": "1f11df41973671e37139395bfd82aa46a055fd7b23ae052a645874f4378e9929"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.3.0/coigue_0.3.0_linux_arm64.deb",
+      "sha256": "dee603c2933c588f151c49edf1f1298708fa1cf4c466e67e4449c67e47a62dce"
     },
     {
       "package": "hoot",
