@@ -19,35 +19,35 @@
     },
     {
       "package": "coigue",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "arch": "arm64",
       "format": "rpm",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.4.0/coigue-0.4.0-1.aarch64.rpm",
-      "sha256": "bd69d401555ad04c6f4964a1299ed84d1a544dd911b8ed4d8f04abc40dd5bce0"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.5.0/coigue-0.5.0-1.aarch64.rpm",
+      "sha256": "0c22929d082ece6399c326144369bcdde3f990b9f5a5d343737d089cb1bb137c"
     },
     {
       "package": "coigue",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "arch": "amd64",
       "format": "rpm",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.4.0/coigue-0.4.0-1.x86_64.rpm",
-      "sha256": "4593ad5541fece3c187c8b630d693223c6d116d1656c8e07e011d198c88940dc"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.5.0/coigue-0.5.0-1.x86_64.rpm",
+      "sha256": "3a86ffbb32e26dccb863f73f99047681e1125924b606a4138cd52c8cba18616e"
     },
     {
       "package": "coigue",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "arch": "amd64",
       "format": "deb",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.4.0/coigue_0.4.0_linux_amd64.deb",
-      "sha256": "1b0403b45a875d8d71515f39f2c13cc3457965ee4a87d1c36618edbc8e88b6e4"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.5.0/coigue_0.5.0_linux_amd64.deb",
+      "sha256": "47e4fb6f8fd093819a3014bfc29522aff516cb4caecd7fb313d036605964c3c4"
     },
     {
       "package": "coigue",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "arch": "arm64",
       "format": "deb",
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.4.0/coigue_0.4.0_linux_arm64.deb",
-      "sha256": "9504bd11320c5360ada3a6aeae1fbc2f44171878294b952e0815d1e2b61892ce"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.5.0/coigue_0.5.0_linux_arm64.deb",
+      "sha256": "d5d7cc46f595934b2634a20a95f921bab70088d5d15c5e5786c77d7036df12f0"
     },
     {
       "package": "hoot",
