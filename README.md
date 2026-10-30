@@ -36,7 +36,7 @@ open -a /Applications/sqlite-explorer.app
 open -a /Applications/Nodwyn.app
 ```
 
-Nodwyn's cask installs the upstream `Nodwyn.app`, with its own window and icon, for Apple Silicon and Intel in one bundle, and puts its `nodwyn` command on your PATH. It is ad-hoc signed and not notarized, so open it the first time with right-click and Open. Nodwyn was a formula until 0.1.3, whose `Nodwyn.app` only opened the browser; `brew update` moves an installed formula to the cask.
+Nodwyn's cask installs the upstream `Nodwyn.app`, with its own window and icon, for Apple Silicon and Intel in one bundle, and puts its `nodwyn` command on your PATH. It is ad-hoc signed and not notarized, so macOS refuses its first launch, and the `nodwyn` command is killed until you allow it: open Nodwyn once, choose Done, then click Open Anyway beside it in System Settings > Privacy & Security. Right-click and Open no longer does this since macOS 15. Nodwyn was a formula until 0.1.3, whose `Nodwyn.app` only opened the browser; `brew update` moves an installed formula to the cask.
 
 SQLite Explorer's universal DMG supports Intel and Apple Silicon. Version 0.2.1 is ad-hoc signed and not notarized by Apple, so Gatekeeper may block its first launch. See the upstream [signing notes](https://github.com/fclaude/sqlite-explorer/blob/v0.2.1/docs/RELEASING.md#macos-signing). This cask preserves Homebrew's normal quarantine behavior.
 

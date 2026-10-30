@@ -29,8 +29,11 @@ cask "nodwyn" do
   caveats do
     <<~EOS
       This upstream release is ad-hoc signed and is not notarized by Apple.
-      macOS Gatekeeper may block its first launch; open it once with
-      right-click and Open. nodwyn-egress-linux-* inside the app are Linux
+      macOS Gatekeeper refuses its first launch, and until it is allowed the
+      nodwyn command is killed (exit 137). Open Nodwyn once, choose Done, then
+      click Open Anyway beside it in System Settings > Privacy & Security.
+      Right-click and Open no longer does this since macOS 15, and a new
+      version may ask again. nodwyn-egress-linux-* inside the app are Linux
       executables for MCP containers.
     EOS
   end
