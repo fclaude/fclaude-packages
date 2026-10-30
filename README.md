@@ -8,7 +8,7 @@ Packages for my tools on Mac, Ubuntu, and Fedora. Distribution uses this reposit
 | --- | --- | --- |
 | [Brote](https://github.com/fclaude/brote) | 0.8.0 | `brote` Scheme interpreter and `brote-lsp` language server |
 | [Coigüe](https://github.com/fclaude/coigue) | 0.5.0 | `coigue` modal terminal editor, with embedded Brote |
-| [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.2 | `nodwyn`, its MCP egress helper, and a browser app launcher |
+| [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.3 | `nodwyn`, its MCP egress helper, and a browser app launcher |
 | [Hoot](https://github.com/fclaude/hoot) | 0.1.2 | `hoot` terminal UI for reviewing Git changes |
 | [SQLite Explorer](https://github.com/fclaude/sqlite-explorer) | 0.2.1 | Desktop browser and editor for SQLite databases |
 
