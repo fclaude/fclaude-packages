@@ -1,7 +1,6 @@
 class Nodwyn < Formula
   desc "Personal coding agent with a browser interface"
   homepage "https://github.com/fclaude/nodwyn"
-  version "0.1.2"
   if Hardware::CPU.arm?
     url "https://github.com/fclaude/nodwyn/releases/download/v0.1.2/nodwyn-darwin-arm64.tar.gz"
     sha256 "2c53318a054847f0746f70b963cc02e7388695fb9731bc350e90cde286e35a0a"

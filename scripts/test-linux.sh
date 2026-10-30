@@ -34,7 +34,8 @@ test "${evaluation}" = 42
 brote-lsp --version
 coigue --version
 hoot --version
-test "$(nodwyn version)" = 'nodwyn fa17298dc7f568d688dc5b9f85fa01a1c12aa010'
+nodwyn_version=$(nodwyn version)
+test "${nodwyn_version}" = 'nodwyn fa17298dc7f568d688dc5b9f85fa01a1c12aa010'
 test -x /usr/bin/nodwyn-egress
 test -f /usr/share/doc/nodwyn/copyright
 test -f /usr/share/doc/nodwyn/NOTICE
