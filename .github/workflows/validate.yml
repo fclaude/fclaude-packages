@@ -50,25 +50,25 @@ jobs:
           brew --version
       - name: Trust only the five packages under test
         run: |
-          brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-          brew trust --cask fclaude/fclaude-packages/sqlite-explorer
+          brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew trust --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
       - name: Check formula and cask style
         # shfmt has no Intel macOS bottle; lint shared files once on Apple Silicon.
         if: matrix.arch == 'Apple Silicon'
         run: brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
       - name: Audit package definitions
         run: |
-          brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-          brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
+          brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
       - name: Install and test released binaries
         run: |
-          test -z "$(brew deps --include-build fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn)"
-          brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-          for command in brote brote-lsp coigue hoot nodwyn; do
+          test -z "$(brew deps --include-build fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot)"
+          brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          for command in brote brote-lsp coigue hoot; do
             lipo "$(command -v "$command")" -verify_arch "$(uname -m)"
           done
-          brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-          brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
+          brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
       - name: Exercise terminal applications
         run: /usr/bin/python3 "$(brew --repository fclaude/fclaude-packages)/scripts/pty-smoke.py"
       - name: Install and verify SQLite Explorer
@@ -82,11 +82,32 @@ jobs:
           test "$(/usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$app/Contents/Info.plist")" = 12.0
           lipo "$app/Contents/MacOS/sqlite-explorer" -verify_arch x86_64 arm64
           codesign --verify --deep --strict "$app"
+      - name: Install and verify Nodwyn
+        run: |
+          brew install --cask fclaude/fclaude-packages/nodwyn
+          app=/Applications/Nodwyn.app
+          plutil -lint "$app/Contents/Info.plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" = com.nodwyn.app
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.1.4
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' "$app/Contents/Info.plist")" = Nodwyn
+          test -s "$app/Contents/Resources/Nodwyn.icns"
+          lipo "$app/Contents/MacOS/nodwyn" -verify_arch x86_64 arm64
+          codesign --verify --deep --strict "$app"
+          for arch in amd64 arm64; do
+            test "$(head -c 4 "$app/Contents/MacOS/nodwyn-egress-linux-$arch" | od -An -tx1 | tr -d ' ')" = 7f454c46
+          done
+          # The command on PATH runs the app's own executable, and it is the
+          # webview build: only that one holds the desktop bridge's script.
+          test "$(nodwyn version)" = 'nodwyn 1286c6ad19c414b1b38314a35b56fa725e93cc5e'
+          strings "$app/Contents/MacOS/nodwyn" | grep -q main.desktopScript
       - name: Check uninstall
         run: |
           brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer
           test ! -e /Applications/sqlite-explorer.app
-          brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
+          brew uninstall --cask fclaude/fclaude-packages/nodwyn
+          test ! -e /Applications/Nodwyn.app
+          test ! -e "$(brew --prefix)/bin/nodwyn"
+          brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 
   linux:
     name: Linux (${{ matrix.arch }})

@@ -41,16 +41,16 @@ Keep packaging changes in this repository. Publish and validate an upstream rele
 From this repository checkout, tapped as `fclaude/fclaude-packages`:
 
 ```sh
-brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-brew trust --cask fclaude/fclaude-packages/sqlite-explorer
+brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew trust --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
 brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
-brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
-brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
-brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
+brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 python3 scripts/pty-smoke.py
-brew install --cask fclaude/fclaude-packages/sqlite-explorer
+brew install --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
 ```
 
 For already installed packages, use `brew reinstall <formula>` or `brew reinstall --cask <cask>` to test the changed definition. The pseudo-terminal checks use temporary homes and files; Hoot never starts an agent in these tests.
@@ -61,7 +61,7 @@ The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a rea
 
 ## Linux packages
 
-`packaging/linux/releases.json` pins versioned upstream assets and SHA256 checksums. Keep Coigüe, Hoot and SQLite Explorer DEB/RPM files unchanged; Brote and Nodwyn are packaged from their portable Linux tarballs using their respective nFPM recipes. Nodwyn preserves both executables next to each other, LICENSE, NOTICE and source provenance. Its browser launcher is packaging-owned. The build script downloads a pinned, checksum-verified nFPM 2.48.0 binary into the ignored local cache. No system installation, signing key, or external hosting account is needed.
+`packaging/linux/releases.json` pins versioned upstream assets and SHA256 checksums. Keep Coigüe, Hoot and SQLite Explorer DEB/RPM files unchanged; Brote and Nodwyn are packaged from their portable Linux tarballs using their respective nFPM recipes. Nodwyn preserves both executables next to each other, LICENSE, NOTICE and source provenance. Its Linux browser launcher is packaging-owned. The build script downloads a pinned, checksum-verified nFPM 2.48.0 binary into the ignored local cache. No system installation, signing key, or external hosting account is needed.
 
 Run on Linux with Python 3.11 or newer:
 
@@ -91,4 +91,4 @@ Hosting signed APT/DNF repositories, adding signing keys, and configuring extern
 
 ## Nodwyn release contract
 
-Nodwyn portable archives have flat `nodwyn`, `nodwyn-egress`, `LICENSE` and `NOTICE` members. `nodwyn version` reports the full source commit, not the release tag; update the expected commit in formula/container checks with the pinned archive URLs and hashes. The egress helper is always Linux, including in Mac archives. Native CI executes the main binary and checks the helper is present; it never executes the Linux helper on macOS. The package-supplied Mac app is a shell launcher for `nodwyn app`, not a native webview. Preserve the unsigned/notarization caveat.
+Nodwyn portable archives have flat `nodwyn`, `nodwyn-egress`, `LICENSE` and `NOTICE` members; Linux packages are built from them. On a Mac, `Casks/nodwyn.rb` installs the release's `Nodwyn-macos-universal.zip`: `Nodwyn.app` with the webview build, universal, ad-hoc signed, its icon and `nodwyn-egress-linux-amd64`/`-arm64` beside the executable. `nodwyn version` reports the full source commit, not the release tag; update the expected commit in the cask and container checks with the pinned URLs and hashes, and the bundle version in CI. The cask's `nodwyn` command is a wrapper that `exec`s the app's executable by its path, because nodwyn finds its egress helper next to the executable it was started as, and a symlink on PATH would be that executable. The egress helper is always Linux. Native CI executes the main binary and checks the helpers' ELF headers; it never executes a Linux helper on macOS. Nodwyn was a formula until 0.1.3; `tap_migrations.json` moves an installed formula to the cask on `brew update`. Preserve the unsigned/notarization caveat.
