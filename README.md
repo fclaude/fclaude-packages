@@ -8,19 +8,20 @@ Packages for my tools on Mac, Ubuntu, and Fedora. Distribution uses this reposit
 | --- | --- | --- |
 | [Brote](https://github.com/fclaude/brote) | 0.8.0 | `brote` Scheme interpreter and `brote-lsp` language server |
 | [Coigüe](https://github.com/fclaude/coigue) | 0.5.0 | `coigue` modal terminal editor, with embedded Brote |
+| [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.2 | `nodwyn`, its MCP egress helper, and a browser app launcher |
 | [Hoot](https://github.com/fclaude/hoot) | 0.1.2 | `hoot` terminal UI for reviewing Git changes |
 | [SQLite Explorer](https://github.com/fclaude/sqlite-explorer) | 0.2.1 | Desktop browser and editor for SQLite databases |
 
 ## Mac
 
-Supports native Apple Silicon and Intel installations using [Homebrew](https://brew.sh). All three CLI formulas install checksum-verified upstream binaries. No Go or Rust compiler is needed. Hoot runs the Git on your PATH, including Apple's command-line tools Git; it does not force installation or upgrading of Homebrew Git.
+Supports native Apple Silicon and Intel installations using [Homebrew](https://brew.sh). All four CLI formulas install checksum-verified upstream binaries. No Go or Rust compiler is needed. Hoot runs the Git on your PATH, including Apple's command-line tools Git; it does not force installation or upgrading of Homebrew Git.
 
 ### Install
 
 ```sh
 brew tap fclaude/fclaude-packages https://github.com/fclaude/fclaude-packages.git
 brew update
-brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
 brew install --cask fclaude/fclaude-packages/sqlite-explorer
 ```
 
@@ -39,7 +40,7 @@ SQLite Explorer's universal DMG supports Intel and Apple Silicon. Version 0.2.1 
 
 ```sh
 brew update
-brew upgrade fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew upgrade fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
 brew upgrade --cask fclaude/fclaude-packages/sqlite-explorer
 ```
 
@@ -48,7 +49,7 @@ The Hoot formula has packaging revision 1 so installations made with the earlier
 ### Uninstall
 
 ```sh
-brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
 brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer
 brew untap fclaude/fclaude-packages
 ```
@@ -57,13 +58,13 @@ Uninstall only the tools you installed. Documents, databases, and application pr
 
 ## Ubuntu
 
-Tested on Ubuntu 24.04. Brote, Coigüe, and Hoot support amd64 and arm64. SQLite Explorer is available only for amd64. Hoot requires glibc 2.39 or newer; these Hoot packages do not support Ubuntu 22.04.
+Tested on Ubuntu 24.04. Brote, Coigüe, Hoot, and Nodwyn support amd64 and arm64. SQLite Explorer is available only for amd64. Hoot requires glibc 2.39 or newer; these Hoot packages do not support Ubuntu 22.04.
 
 Download the matching `.deb` files and checksum manifest from [GitHub Releases](https://github.com/fclaude/fclaude-packages/releases). With the GitHub CLI, run in a new download directory:
 
 ```sh
 arch=$(dpkg --print-architecture)
-gh release download packages-2026-10-29-3 --repo fclaude/fclaude-packages \
+gh release download --repo fclaude/fclaude-packages \
   --pattern "*${arch}.deb" --pattern "SHA256SUMS-linux-${arch}"
 sha256sum --check --ignore-missing "SHA256SUMS-linux-${arch}"
 sudo apt install ./*.deb
@@ -74,21 +75,21 @@ This installs all available tools for that architecture, resolving dependencies 
 These are unsigned local packages hosted on GitHub, not a configured signed APT repository. To upgrade, download and verify a newer package set and repeat the local installation. To uninstall selected tools:
 
 ```sh
-sudo apt remove brote coigue hoot sqlite-explorer
+sudo apt remove brote coigue hoot nodwyn sqlite-explorer
 ```
 
 Omit tools you did not install; arm64 has no SQLite Explorer package.
 
 ## Fedora
 
-Tested on Fedora 44. Brote, Coigüe, and Hoot support x86_64 and aarch64. SQLite Explorer is available only for x86_64.
+Tested on Fedora 44. Brote, Coigüe, Hoot, and Nodwyn support x86_64 and aarch64. SQLite Explorer is available only for x86_64.
 
 Download the matching `.rpm` files and checksum manifest from [GitHub Releases](https://github.com/fclaude/fclaude-packages/releases). With the GitHub CLI, run in a new download directory:
 
 ```sh
 arch=$(uname -m)
 if [ "$arch" = aarch64 ]; then checksum_arch=arm64; else checksum_arch=amd64; fi
-gh release download packages-2026-10-29-3 --repo fclaude/fclaude-packages \
+gh release download --repo fclaude/fclaude-packages \
   --pattern "*.${arch}.rpm" --pattern "SHA256SUMS-linux-${checksum_arch}"
 sha256sum --check --ignore-missing "SHA256SUMS-linux-${checksum_arch}"
 sudo dnf install ./*.rpm
@@ -99,10 +100,12 @@ This installs all available tools for that architecture, resolving dependencies 
 These are unsigned local packages hosted on GitHub, not a configured signed DNF repository. To upgrade, download and verify a newer package set and repeat the local installation. To uninstall selected tools:
 
 ```sh
-sudo dnf remove brote coigue hoot sqlite-explorer
+sudo dnf remove brote coigue hoot nodwyn sqlite-explorer
 ```
 
 Omit tools you did not install; aarch64 has no SQLite Explorer package.
+
+Nodwyn uses the published portable GitHub binaries. `nodwyn app` opens your browser. The Mac binaries are unsigned and unnotarized, and `nodwyn-egress` is a Linux executable for MCP containers on both platforms. The Homebrew formula supplies `Nodwyn.app` as a small browser launcher; installation does not start a daemon. Nodwyn retains its Apache-2.0 license and NOTICE.
 
 ## Optional integrations
 
@@ -112,7 +115,7 @@ Coigüe embeds Brote. Install the separate Brote package for standalone Scheme u
 
 CI tests native Intel and Apple Silicon Mac installs, CLI behavior, pseudo-terminal editing and Git review, the universal app bundle, and uninstall. Native amd64 and arm64 Linux jobs test installation, CLI behavior, and uninstall in Ubuntu 24.04 and Fedora 44 containers. SQLite Explorer's Linux shared-library resolution and desktop entry are checked on amd64. CI does not launch the GUI or prove Gatekeeper acceptance.
 
-Brote's Linux packages are assembled here from verified static upstream binaries. Other Linux packages are reused byte-for-byte from upstream. Licenses and Coigüe's third-party notices are preserved. See [MAINTAINING.md](MAINTAINING.md) for release updates and checks.
+Brote's and Nodwyn's Linux packages are assembled here from verified static upstream binaries. Other Linux packages are reused byte-for-byte from upstream. Licenses and Coigüe's third-party notices are preserved. See [MAINTAINING.md](MAINTAINING.md) for release updates and checks.
 
 ## Adoption signals
 

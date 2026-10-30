@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Nodwyn
+Comment=Personal coding agent
+Exec=nodwyn app
+TryExec=nodwyn
+Icon=utilities-terminal
+Terminal=false
+Categories=Development;

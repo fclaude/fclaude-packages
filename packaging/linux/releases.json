@@ -96,6 +96,24 @@
       "format": "deb",
       "url": "https://github.com/fclaude/sqlite-explorer/releases/download/v0.2.1/sqlite-explorer_0.2.1_amd64.deb",
       "sha256": "d1260a244e79acd1755e98096a43fca6a7194cef294aa9d7f0d0ae4eaa5cfd4b"
+    },
+    {
+      "package": "nodwyn",
+      "version": "0.1.2",
+      "arch": "amd64",
+      "format": "tar.gz",
+      "url": "https://github.com/fclaude/nodwyn/releases/download/v0.1.2/nodwyn-linux-amd64.tar.gz",
+      "sha256": "193d27b0156112031f136180a6574390bf4902aa0e76dfa03f08f970cb54092e",
+      "source_sha": "fa17298dc7f568d688dc5b9f85fa01a1c12aa010"
+    },
+    {
+      "package": "nodwyn",
+      "version": "0.1.2",
+      "arch": "arm64",
+      "format": "tar.gz",
+      "url": "https://github.com/fclaude/nodwyn/releases/download/v0.1.2/nodwyn-linux-arm64.tar.gz",
+      "sha256": "c02efe8c35aec630f9685eae7d6814ba9b2f03a34ef8408e28a711d740d01098",
+      "source_sha": "fa17298dc7f568d688dc5b9f85fa01a1c12aa010"
     }
   ]
 }

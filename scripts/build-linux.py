@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify upstream packages and build Brote's DEB/RPM from release binaries."""
+"""Verify upstream packages and build Brote/Nodwyn DEB/RPM from release binaries."""
 
 import argparse
 import hashlib
@@ -78,7 +78,7 @@ def main():
         if asset["arch"] != args.arch:
             continue
         archive = fetch(asset["url"], asset["sha256"], cache)
-        if asset["package"] != "brote":
+        if asset["package"] not in ["brote", "nodwyn"]:
             destination = output / asset["format"] / archive.name
             shutil.copyfile(archive, destination)
             artifacts.append(destination)
@@ -91,21 +91,32 @@ def main():
             f"https://github.com/goreleaser/nfpm/releases/download/v{NFPM_VERSION}/"
             f"nfpm_{NFPM_VERSION}_Linux_{host}.tar.gz", NFPM_SHA256[host], cache,
         )
-        with tempfile.TemporaryDirectory(prefix="brote-package-") as directory:
+        project = asset["package"]
+        with tempfile.TemporaryDirectory(prefix=f"{project}-package-") as directory:
             stage = Path(directory)
             nfpm = stage / "nfpm"
             extract_file(nfpm_archive, "nfpm", nfpm, executable=True)
-            prefix = f"brote_{asset['version']}_linux_{args.arch}"
-            for name in ["brote", "brote-lsp", "LICENSE"]:
-                extract_file(archive, f"{prefix}/{name}", stage / name, name != "LICENSE")
-            env = dict(os.environ, PACKAGE_ARCH=args.arch, BROTE_VERSION=asset["version"],
-                       BROTE_STAGE=str(stage), SOURCE_DATE_EPOCH="1793059200")
+            if project == "brote":
+                prefix = f"brote_{asset['version']}_linux_{args.arch}/"
+                names = ["brote", "brote-lsp", "LICENSE"]
+            else:
+                prefix = ""
+                names = ["nodwyn", "nodwyn-egress", "LICENSE", "NOTICE"]
+                (stage / "github-release.json").write_text(json.dumps(asset, indent=2) + "\n")
+                shutil.copyfile(ROOT / "packaging/nodwyn/com.nodwyn.app.desktop",
+                                stage / "com.nodwyn.app.desktop")
+            for name in names:
+                extract_file(archive, prefix + name, stage / name,
+                             name not in ["LICENSE", "NOTICE"])
+            env = dict(os.environ, PACKAGE_ARCH=args.arch, SOURCE_DATE_EPOCH="1793059200")
+            env[project.upper() + "_VERSION"] = asset["version"]
+            env[project.upper() + "_STAGE"] = str(stage)
             config = stage / "nfpm.yaml"
-            config.write_text(Template((ROOT / "packaging/brote/nfpm.yaml").read_text()).substitute(env))
+            config.write_text(Template((ROOT / f"packaging/{project}/nfpm.yaml").read_text()).substitute(env))
             rpm_arch = "x86_64" if args.arch == "amd64" else "aarch64"
             for kind, filename in [
-                ("deb", f"brote_{asset['version']}-1_{args.arch}.deb"),
-                ("rpm", f"brote-{asset['version']}-1.{rpm_arch}.rpm"),
+                ("deb", f"{project}_{asset['version']}-1_{args.arch}.deb"),
+                ("rpm", f"{project}-{asset['version']}-1.{rpm_arch}.rpm"),
             ]:
                 destination = output / kind / filename
                 subprocess.run([

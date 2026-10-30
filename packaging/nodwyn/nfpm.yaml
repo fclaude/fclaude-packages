@@ -1,0 +1,31 @@
+name: nodwyn
+arch: ${PACKAGE_ARCH}
+platform: linux
+version: ${NODWYN_VERSION}
+release: 1
+maintainer: Francisco Claude-Faust <fclaude@recoded.cl>
+description: Personal coding agent with a browser interface
+homepage: https://github.com/fclaude/nodwyn
+license: Apache-2.0
+section: devel
+priority: optional
+depends:
+  - git
+  - ca-certificates
+contents:
+  - src: ${NODWYN_STAGE}/nodwyn
+    dst: /usr/bin/nodwyn
+    file_info:
+      mode: 0755
+  - src: ${NODWYN_STAGE}/nodwyn-egress
+    dst: /usr/bin/nodwyn-egress
+    file_info:
+      mode: 0755
+  - src: ${NODWYN_STAGE}/LICENSE
+    dst: /usr/share/doc/nodwyn/copyright
+  - src: ${NODWYN_STAGE}/NOTICE
+    dst: /usr/share/doc/nodwyn/NOTICE
+  - src: ${NODWYN_STAGE}/github-release.json
+    dst: /usr/share/nodwyn/github-release.json
+  - src: ${NODWYN_STAGE}/com.nodwyn.app.desktop
+    dst: /usr/share/applications/com.nodwyn.app.desktop

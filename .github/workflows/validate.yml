@@ -11,7 +11,7 @@ permissions:
 
 concurrency:
   group: validate-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   macos:
@@ -48,9 +48,9 @@ jobs:
           uname -m
           sw_vers
           brew --version
-      - name: Trust only the four packages under test
+      - name: Trust only the five packages under test
         run: |
-          brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
           brew trust --cask fclaude/fclaude-packages/sqlite-explorer
       - name: Check formula and cask style
         # shfmt has no Intel macOS bottle; lint shared files once on Apple Silicon.
@@ -58,17 +58,17 @@ jobs:
         run: brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
       - name: Audit package definitions
         run: |
-          brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
           brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
       - name: Install and test released binaries
         run: |
-          test -z "$(brew deps --include-build fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot)"
-          brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-          for command in brote brote-lsp coigue hoot; do
+          test -z "$(brew deps --include-build fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn)"
+          brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
+          for command in brote brote-lsp coigue hoot nodwyn; do
             lipo "$(command -v "$command")" -verify_arch "$(uname -m)"
           done
-          brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-          brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
+          brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
       - name: Exercise terminal applications
         run: /usr/bin/python3 "$(brew --repository fclaude/fclaude-packages)/scripts/pty-smoke.py"
       - name: Install and verify SQLite Explorer
@@ -86,7 +86,7 @@ jobs:
         run: |
           brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer
           test ! -e /Applications/sqlite-explorer.app
-          brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+          brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
 
   linux:
     name: Linux (${{ matrix.arch }})
@@ -107,7 +107,9 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - name: Verify upstream assets and build Brote packages
+      - name: Check packaging integrity guards
+        run: python3 scripts/test-packaging.py
+      - name: Verify upstream assets and build release packages
         run: python3 scripts/build-linux.py --arch "$PACKAGE_ARCH"
       - name: Test Ubuntu 24.04 install, behavior, and uninstall
         run: |
@@ -128,3 +130,26 @@ jobs:
           path: dist/linux/${{ matrix.arch }}/
           if-no-files-found: error
           retention-days: 30
+
+  publish:
+    name: Publish verified Linux packages
+    needs: [macos, linux]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the tested commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Download the native-tested packages from this run
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: linux-*
+          path: release-artifacts
+      - name: Publish a new versioned package set from verified bytes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/publish-linux.py

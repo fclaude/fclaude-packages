@@ -4,7 +4,7 @@ set -euo pipefail
 
 format=${1:?usage: test-linux.sh deb|rpm amd64|arm64}
 arch=${2:?usage: test-linux.sh deb|rpm amd64|arm64}
-packages=(brote coigue hoot)
+packages=(brote coigue hoot nodwyn)
 if [[ "${arch}" == amd64 ]]
 then
   packages+=(sqlite-explorer)
@@ -34,6 +34,18 @@ test "${evaluation}" = 42
 brote-lsp --version
 coigue --version
 hoot --version
+test "$(nodwyn version)" = 'nodwyn fa17298dc7f568d688dc5b9f85fa01a1c12aa010'
+test -x /usr/bin/nodwyn-egress
+test -f /usr/share/doc/nodwyn/copyright
+test -f /usr/share/doc/nodwyn/NOTICE
+desktop-file-validate /usr/share/applications/com.nodwyn.app.desktop
+python3 - <<'PY'
+import json
+from pathlib import Path
+metadata = json.loads(Path('/usr/share/nodwyn/github-release.json').read_text())
+assert metadata['source_sha'] == 'fa17298dc7f568d688dc5b9f85fa01a1c12aa010'
+assert metadata['version'] == '0.1.2'
+PY
 hoot --print-keymap >/tmp/hoot-keymap.md
 grep -q Quit /tmp/hoot-keymap.md
 test -f /usr/share/doc/brote/copyright
@@ -78,7 +90,7 @@ case "${format}" in
   *) exit 2 ;;
 esac
 hash -r
-for package in brote brote-lsp coigue hoot
+for package in brote brote-lsp coigue hoot nodwyn nodwyn-egress
 do
   if command -v "${package}"
   then

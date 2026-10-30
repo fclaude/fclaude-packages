@@ -41,27 +41,27 @@ Keep packaging changes in this repository. Publish and validate an upstream rele
 From this repository checkout, tapped as `fclaude/fclaude-packages`:
 
 ```sh
-brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
 brew trust --cask fclaude/fclaude-packages/sqlite-explorer
 brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
-brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
 brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer
-brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
+brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
+brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
+brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot fclaude/fclaude-packages/nodwyn
 python3 scripts/pty-smoke.py
 brew install --cask fclaude/fclaude-packages/sqlite-explorer
 ```
 
 For already installed packages, use `brew reinstall <formula>` or `brew reinstall --cask <cask>` to test the changed definition. The pseudo-terminal checks use temporary homes and files; Hoot never starts an agent in these tests.
 
-Homebrew 6 requires explicit trust before commands such as audit load third-party package definitions. CI trusts only the four packages under test. Fully qualified `brew install` commands grant the named package trust automatically; users do not need to trust the whole tap.
+Homebrew 6 requires explicit trust before commands such as audit load third-party package definitions. CI trusts only the five packages under test. Fully qualified `brew install` commands grant the named package trust automatically; users do not need to trust the whole tap.
 
-The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a read-only `GITHUB_TOKEN`. Pushes to `main`, pull requests and manual dispatch run validation. It does not publish bottles, update upstream repositories, create credentials, or collect telemetry. Use `brew livecheck --tap=fclaude/fclaude-packages` to inspect newer releases when maintaining the tap; no scheduled updater is configured.
+The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a read-only `GITHUB_TOKEN` for validation. Pushes to `main`, pull requests and manual dispatch run validation. After all native checks pass on a main push, a separate publication job with contents-write permission publishes the exact tested Linux artifacts and checksum manifests as a new GitHub release. It does not publish bottles or update upstream repositories. Use `brew livecheck --tap=fclaude/fclaude-packages` to inspect newer releases when maintaining the tap; no scheduled updater is configured.
 
 ## Linux packages
 
-`packaging/linux/releases.json` pins versioned upstream assets and SHA256 checksums. Keep Coigüe, Hoot and SQLite Explorer DEB/RPM files unchanged; Brote is packaged from its static Linux tarballs using `packaging/brote/nfpm.yaml`. The build script downloads a pinned, checksum-verified nFPM 2.48.0 binary into the ignored local cache. No system installation, signing key, or external hosting account is needed.
+`packaging/linux/releases.json` pins versioned upstream assets and SHA256 checksums. Keep Coigüe, Hoot and SQLite Explorer DEB/RPM files unchanged; Brote and Nodwyn are packaged from their portable Linux tarballs using their respective nFPM recipes. Nodwyn preserves both executables next to each other, LICENSE, NOTICE and source provenance. Its browser launcher is packaging-owned. The build script downloads a pinned, checksum-verified nFPM 2.48.0 binary into the ignored local cache. No system installation, signing key, or external hosting account is needed.
 
 Run on Linux with Python 3.11 or newer:
 
@@ -85,6 +85,10 @@ docker run --rm -v "$PWD:/workspace:ro" -v "$PWD/dist/linux/amd64:/packages:ro" 
 
 Use a native ARM64 Docker host and change the mounted output path and final argument to `arm64` to repeat on ARM64. Do not treat metadata inspection or emulation alone as proof of a native install.
 
-Successful CI uploads `linux-amd64` and `linux-arm64` artifacts. For a GitHub release, download the artifacts from the successful run for the exact reviewed commit, preserve the package bytes, and attach all DEB/RPM files and both checksum manifests. Tag the package set (for example `packages-2026-10-28`) at that commit and include the component versions and tested distributions in its release notes. Existing authenticated `gh` can publish it; the validation workflow has read-only repository permissions and never publishes on its own.
+Successful CI uploads `linux-amd64` and `linux-arm64` artifacts. Main pushes publish a new `packages-YYYY-MM-DD-RUN` release only after both Mac and both Linux matrix jobs pass. The publisher checks artifact inventory and checksums, refuses a superseded main commit, uploads a draft, verifies GitHub asset hashes, and then publishes. Previously published assets are never replaced. A retry can replace only its own draft. README download commands select the latest published set.
 
 Hosting signed APT/DNF repositories, adding signing keys, and configuring external accounts are separate work. Public GitHub releases provide downloadable local packages without those services.
+
+## Nodwyn release contract
+
+Nodwyn portable archives have flat `nodwyn`, `nodwyn-egress`, `LICENSE` and `NOTICE` members. `nodwyn version` reports the full source commit, not the release tag; update the expected commit in formula/container checks with the pinned archive URLs and hashes. The egress helper is always Linux, including in Mac archives. Native CI executes the main binary and checks the helper is present; it never executes the Linux helper on macOS. The package-supplied Mac app is a shell launcher for `nodwyn app`, not a native webview. Preserve the unsigned/notarization caveat.
