@@ -99,21 +99,21 @@
     },
     {
       "package": "nodwyn",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "arch": "amd64",
       "format": "tar.gz",
-      "url": "https://github.com/fclaude/nodwyn/releases/download/v0.1.5/nodwyn-linux-amd64.tar.gz",
-      "sha256": "a14645c960acd08482126101f155835e56ad7120cc60213999265ee67aac41b4",
-      "source_sha": "740812855df86aee2a007f79f8be5ebe83b44ffe"
+      "url": "https://github.com/fclaude/nodwyn/releases/download/v0.1.6/nodwyn-linux-amd64.tar.gz",
+      "sha256": "5149c5246caaa1d6754f33535db0c9181beb46f34a26e7cded093ffcbfd7a314",
+      "source_sha": "5f2aa3c493ff1844d4ca564811e7879d92c3bbdc"
     },
     {
       "package": "nodwyn",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "arch": "arm64",
       "format": "tar.gz",
-      "url": "https://github.com/fclaude/nodwyn/releases/download/v0.1.5/nodwyn-linux-arm64.tar.gz",
-      "sha256": "7ff9fd2686a4788bd781c12c199ef4bf7826d2ccf0cea1dfb9687f44dca11d17",
-      "source_sha": "740812855df86aee2a007f79f8be5ebe83b44ffe"
+      "url": "https://github.com/fclaude/nodwyn/releases/download/v0.1.6/nodwyn-linux-arm64.tar.gz",
+      "sha256": "3bc959132a8eee9eca07690d9c1be846cc10bacbd1ba31c75a0c7be7b2ad8212",
+      "source_sha": "5f2aa3c493ff1844d4ca564811e7879d92c3bbdc"
     }
   ]
 }
