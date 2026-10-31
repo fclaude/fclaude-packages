@@ -4,7 +4,7 @@ Downloadable Ubuntu DEB and Fedora RPM packages for Francisco's tools.
 | --- | --- | --- |
 | Brote | 0.8.0-1 | amd64 / x86_64, arm64 / aarch64 |
 | Coigüe | 0.5.2-1 | amd64 / x86_64, arm64 / aarch64 |
-| Nodwyn | 0.1.7-1 | amd64 / x86_64, arm64 / aarch64 |
+| Nodwyn | 0.1.8-1 | amd64 / x86_64, arm64 / aarch64 |
 | Hoot | 0.1.2-1 | amd64 / x86_64, arm64 / aarch64 |
 | SQLite Explorer | 0.2.1 | amd64 / x86_64 only |
 
