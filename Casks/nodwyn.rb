@@ -1,6 +1,6 @@
 cask "nodwyn" do
-  version "0.1.8"
-  sha256 "2ed8f4941f6cdc4b8f97ef89e04118fcfecb15af52ca718b2de0a13566af3d83"
+  version "0.1.9"
+  sha256 "f3ece5043009c9ace223a3d3bb13c5afc1b3ebf79db11b00c269a7f51582d15c"
 
   url "https://github.com/fclaude/nodwyn/releases/download/v#{version}/Nodwyn-macos-universal.zip"
   name "Nodwyn"
