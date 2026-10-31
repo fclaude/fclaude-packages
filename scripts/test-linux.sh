@@ -35,7 +35,7 @@ brote-lsp --version
 coigue --version
 hoot --version
 nodwyn_version=$(nodwyn version)
-test "${nodwyn_version}" = 'nodwyn 5f2aa3c493ff1844d4ca564811e7879d92c3bbdc'
+test "${nodwyn_version}" = 'nodwyn f5522488325ce9d21124730931bdb5a26ea08271'
 test -x /usr/bin/nodwyn-egress
 test -f /usr/share/doc/nodwyn/copyright
 test -f /usr/share/doc/nodwyn/NOTICE
@@ -44,8 +44,8 @@ python3 - <<'PY'
 import json
 from pathlib import Path
 metadata = json.loads(Path('/usr/share/nodwyn/github-release.json').read_text())
-assert metadata['source_sha'] == '5f2aa3c493ff1844d4ca564811e7879d92c3bbdc'
-assert metadata['version'] == '0.1.6'
+assert metadata['source_sha'] == 'f5522488325ce9d21124730931bdb5a26ea08271'
+assert metadata['version'] == '0.1.7'
 PY
 hoot --print-keymap >/tmp/hoot-keymap.md
 grep -q Quit /tmp/hoot-keymap.md
