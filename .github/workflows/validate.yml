@@ -14,6 +14,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  windows:
+    name: Windows (amd64)
+    runs-on: windows-2022
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify native Windows packages and CLI behavior
+        shell: pwsh
+        run: ./scripts/test-windows.ps1
+
   macos:
     name: macOS (${{ matrix.arch }})
     strategy:

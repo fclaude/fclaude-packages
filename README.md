@@ -111,6 +111,25 @@ Omit tools you did not install; aarch64 has no SQLite Explorer package.
 
 Nodwyn's Linux packages use the published portable GitHub binaries, whose `nodwyn app` opens your browser; on a Mac the cask installs the upstream app, which opens its own window. `nodwyn-egress` is a Linux executable for MCP containers on both platforms. Installation does not start a daemon. Nodwyn retains its Apache-2.0 license and NOTICE.
 
+## Windows
+
+Brote and Coigüe support native Windows amd64. Their Scoop manifests live in
+`bucket/`, using the official versioned Windows ZIPs and SHA-256 checksums:
+
+```powershell
+scoop bucket add fclaude https://github.com/fclaude/fclaude-packages.git
+scoop install fclaude/brote fclaude/coigue
+```
+
+Both Brote commands are installed; Coigüe retains its third-party notices.
+Use Windows Terminal for Coigüe. Its upstream Explorer rename, delete and restore
+features require Linux or macOS. Package CI checks native version reporting and
+Brote evaluation; it does not exercise interactive terminal editing on Windows.
+Nodwyn currently has no native Windows package because its Unix process and
+security primitives need an upstream port. No WSL substitute is installed.
+The homelab's Windows Ansible client consumes these same reviewed manifests
+without requiring Scoop or executing package install hooks.
+
 ## Optional integrations
 
 Coigüe embeds Brote. Install the separate Brote package for standalone Scheme use or its optional language server. Other language servers are optional. Hoot's agent features need a separately installed `opencode` or `pi`.

@@ -1,0 +1,20 @@
+{
+  "version": "0.9.0",
+  "description": "Scheme interpreter and language server",
+  "homepage": "https://github.com/fclaude/brote",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/fclaude/brote/releases/download/v0.9.0/brote_0.9.0_windows_amd64.zip",
+      "hash": "d3fc3dec215533ba134552c602ee44c68608f39ac132f95ec1021e8078d3fbd9",
+      "extract_dir": "brote_0.9.0_windows_amd64"
+    }
+  },
+  "bin": [
+    "brote.exe",
+    "brote-lsp.exe"
+  ],
+  "checkver": {
+    "github": "https://github.com/fclaude/brote"
+  }
+}

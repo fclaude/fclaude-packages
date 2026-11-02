@@ -92,3 +92,14 @@ Hosting signed APT/DNF repositories, adding signing keys, and configuring extern
 ## Nodwyn release contract
 
 Nodwyn portable archives have flat `nodwyn`, `nodwyn-egress`, `LICENSE` and `NOTICE` members; Linux packages are built from them. On a Mac, `Casks/nodwyn.rb` installs the release's `Nodwyn-macos-universal.zip`: `Nodwyn.app` with the webview build, universal, ad-hoc signed, its icon and `nodwyn-egress-linux-amd64`/`-arm64` beside the executable. `nodwyn version` reports the full source commit, not the release tag; update the expected commit in the cask and container checks with the pinned URLs and hashes, and the bundle version in CI. The cask's `nodwyn` command is a wrapper that `exec`s the app's executable by its path, because nodwyn finds its egress helper next to the executable it was started as, and a symlink on PATH would be that executable. The egress helper is always Linux. Native CI executes the main binary and checks the helpers' ELF headers; it never executes a Linux helper on macOS. Nodwyn was a formula until 0.1.3; `tap_migrations.json` moves an installed formula to the cask on `brew update`. Preserve the unsigned/notarization caveat. GitHub's macOS runners have Gatekeeper switched off, so CI starting `nodwyn` does not show that a Mac refuses the ad-hoc signed app until Open Anyway: keep the cask caveat saying so, and check a first launch on a real Mac.
+
+## Windows manifests
+
+`bucket/brote.json` and `bucket/coigue.json` are native amd64 Scoop manifests.
+Verify official release ZIP bytes against GitHub's asset digest and upstream
+SHA256SUMS, inspect the top-level directory and all license files, then change
+the version, URL, hash and extract directory together. Do not add install hooks
+or silently replace upstream bytes. `scripts/test-windows.ps1` runs on the native
+Windows CI runner and can also run on Lion; it uses a unique temporary directory,
+bounded CLI processes, and cleanup. `checkver` reports newer upstream versions;
+there is no automatic manifest writer or unreviewed upgrade step.
