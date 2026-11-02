@@ -35,17 +35,32 @@ brote-lsp --version
 coigue --version
 hoot --version
 nodwyn_version=$(nodwyn version)
-test "${nodwyn_version}" = 'nodwyn 462ef5d20302ab6af312682c5cc71d5475ccea45'
+test "${nodwyn_version}" = 'nodwyn fb1e9b5581883bea5307d174f4621425875c3116'
 test -x /usr/bin/nodwyn-egress
 test -f /usr/share/doc/nodwyn/copyright
 test -f /usr/share/doc/nodwyn/NOTICE
 desktop-file-validate /usr/share/applications/com.nodwyn.app.desktop
+grep -qx 'Icon=com.nodwyn.app' /usr/share/applications/com.nodwyn.app.desktop
+grep -qx 'StartupWMClass=com.nodwyn.app' /usr/share/applications/com.nodwyn.app.desktop
+test -s /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
+test -s /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
+if [[ "${arch}" == amd64 ]]
+then
+  ldd /usr/bin/nodwyn >/tmp/nodwyn-linkage.txt
+  cat /tmp/nodwyn-linkage.txt
+  if grep -q 'not found' /tmp/nodwyn-linkage.txt
+  then
+    exit 1
+  fi
+  grep -q libwebkit2gtk-4.1 /tmp/nodwyn-linkage.txt
+  grep -q libgtk-3 /tmp/nodwyn-linkage.txt
+fi
 python3 - <<'PY'
 import json
 from pathlib import Path
 metadata = json.loads(Path('/usr/share/nodwyn/github-release.json').read_text())
-assert metadata['source_sha'] == '462ef5d20302ab6af312682c5cc71d5475ccea45'
-assert metadata['version'] == '0.1.11'
+assert metadata['source_sha'] == 'fb1e9b5581883bea5307d174f4621425875c3116'
+assert metadata['version'] == '0.1.13'
 PY
 hoot --print-keymap >/tmp/hoot-keymap.md
 grep -q Quit /tmp/hoot-keymap.md
@@ -103,4 +118,7 @@ if [[ "${arch}" == amd64 ]]
 then
   test ! -e /usr/bin/sqlite-explorer
 fi
+test ! -e /usr/share/applications/com.nodwyn.app.desktop
+test ! -e /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
+test ! -e /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
 echo "Install, functional checks, and uninstall passed: ${format} ${arch}"

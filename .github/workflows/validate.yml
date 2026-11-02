@@ -100,7 +100,7 @@ jobs:
           app=/Applications/Nodwyn.app
           plutil -lint "$app/Contents/Info.plist"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" = com.nodwyn.app
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.1.11
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.1.13
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' "$app/Contents/Info.plist")" = Nodwyn
           test -s "$app/Contents/Resources/Nodwyn.icns"
           lipo "$app/Contents/MacOS/nodwyn" -verify_arch x86_64 arm64
@@ -110,7 +110,7 @@ jobs:
           done
           # The command on PATH runs the app's own executable, and it is the
           # webview build: only that one holds the desktop bridge's script.
-          test "$(nodwyn version)" = 'nodwyn 462ef5d20302ab6af312682c5cc71d5475ccea45'
+          test "$(nodwyn version)" = 'nodwyn fb1e9b5581883bea5307d174f4621425875c3116'
           strings "$app/Contents/MacOS/nodwyn" | grep -q main.desktopScript
       - name: Check uninstall
         run: |
@@ -156,6 +156,13 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace:ro" \
             -v "$GITHUB_WORKSPACE/dist/linux/$PACKAGE_ARCH:/packages:ro" \
             fedora:44 bash /workspace/scripts/test-linux.sh rpm "$PACKAGE_ARCH"
+      - name: Build and test the Arch Linux native package
+        if: matrix.arch == 'amd64'
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -v "$GITHUB_WORKSPACE/dist/linux/$PACKAGE_ARCH:/packages" \
+            archlinux:base bash /workspace/scripts/test-arch.sh
       - name: Upload verified downloadable packages
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

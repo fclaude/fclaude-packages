@@ -56,11 +56,26 @@ class IntegrityTests(unittest.TestCase):
                 entries.append(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}\n")
             (base / f"SHA256SUMS-linux-{arch}").write_text("".join(entries))
 
+        base = root / "linux-amd64"
+        (base / "arch").mkdir()
+        package = base / "arch/nodwyn-0.1.13-1-x86_64.pkg.tar.zst"
+        package.write_bytes(b"verified Arch package")
+        (base / "SHA256SUMS-archlinux-x86_64").write_text(
+            f"{hashlib.sha256(package.read_bytes()).hexdigest()}  {package.name}\n")
+
+    def test_publisher_rejects_modified_arch_package(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            next((root / "linux-amd64/arch").iterdir()).write_bytes(b"modified")
+            with self.assertRaisesRegex(ValueError, "Arch package checksum mismatch"):
+                publish.inventory(root)
+
     def test_publisher_accepts_both_complete_verified_inventories(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self.fixture(root)
-            self.assertEqual(len(publish.inventory(root)), 20)
+            self.assertEqual(len(publish.inventory(root)), 22)
 
     def test_publisher_rejects_modified_package(self):
         with tempfile.TemporaryDirectory() as directory:

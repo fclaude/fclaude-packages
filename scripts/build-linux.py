@@ -103,14 +103,47 @@ def main():
                 prefix = ""
                 names = ["nodwyn", "nodwyn-egress", "LICENSE", "NOTICE"]
                 (stage / "github-release.json").write_text(json.dumps(asset, indent=2) + "\n")
-                shutil.copyfile(ROOT / "packaging/nodwyn/com.nodwyn.app.desktop",
-                                stage / "com.nodwyn.app.desktop")
+                if asset.get("native"):
+                    extract_file(archive, "share/applications/com.nodwyn.app.desktop", stage / "com.nodwyn.app.desktop")
+                    for size, extension in [("scalable", "svg"), ("512x512", "png")]:
+                        extract_file(archive, f"share/icons/hicolor/{size}/apps/com.nodwyn.app.{extension}",
+                                     stage / f"com.nodwyn.app.{extension}")
+                else:
+                    for name in ["com.nodwyn.app.desktop", "com.nodwyn.app.svg", "com.nodwyn.app.png"]:
+                        shutil.copyfile(ROOT / "packaging/nodwyn" / name, stage / name)
+                shutil.copyfile(ROOT / "packaging/nodwyn/refresh-caches.sh", stage / "refresh-caches.sh")
             for name in names:
                 extract_file(archive, prefix + name, stage / name,
                              name not in ["LICENSE", "NOTICE"])
             env = dict(os.environ, PACKAGE_ARCH=args.arch, SOURCE_DATE_EPOCH="1793059200")
             env[project.upper() + "_VERSION"] = asset["version"]
             env[project.upper() + "_STAGE"] = str(stage)
+            env["NODWYN_NATIVE_METADATA"] = ""
+            if project == "nodwyn" and asset.get("native"):
+                env["NODWYN_NATIVE_METADATA"] = """overrides:
+  deb:
+    depends:
+      - git
+      - ca-certificates
+      - libgtk-3-0t64
+      - libwebkit2gtk-4.1-0
+      - libayatana-appindicator3-1
+      - libnotify-bin
+      - xdg-utils
+      - hicolor-icon-theme
+      - desktop-file-utils
+  rpm:
+    depends:
+      - git
+      - ca-certificates
+      - gtk3
+      - webkit2gtk4.1
+      - libayatana-appindicator-gtk3
+      - libnotify
+      - xdg-utils
+      - hicolor-icon-theme
+      - desktop-file-utils
+"""
             config = stage / "nfpm.yaml"
             config.write_text(Template((ROOT / f"packaging/{project}/nfpm.yaml").read_text()).substitute(env))
             rpm_arch = "x86_64" if args.arch == "amd64" else "aarch64"

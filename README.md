@@ -2,13 +2,13 @@
 
 [![Validate packages](https://github.com/fclaude/fclaude-packages/actions/workflows/validate.yml/badge.svg)](https://github.com/fclaude/fclaude-packages/actions/workflows/validate.yml)
 
-Packages for my tools on Mac, Ubuntu, and Fedora. Distribution uses this repository and [GitHub Releases](https://github.com/fclaude/fclaude-packages/releases).
+Packages for my tools on Mac, Ubuntu, Fedora, and Arch Linux (Nodwyn). Distribution uses this repository and [GitHub Releases](https://github.com/fclaude/fclaude-packages/releases).
 
 | Tool | Version | Installs |
 | --- | --- | --- |
 | [Brote](https://github.com/fclaude/brote) | 0.9.0 | `brote` Scheme interpreter and `brote-lsp` language server |
 | [Coigüe](https://github.com/fclaude/coigue) | 0.6.1 | `coigue` modal terminal editor, with embedded Brote |
-| [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.11 | `Nodwyn.app` with its own window on Mac, the `nodwyn` command and its MCP egress helper |
+| [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.13 | `Nodwyn.app` with its own window on Mac, the `nodwyn` command and its MCP egress helper |
 | [Hoot](https://github.com/fclaude/hoot) | 0.1.2 | `hoot` terminal UI for reviewing Git changes |
 | [SQLite Explorer](https://github.com/fclaude/sqlite-explorer) | 0.2.1 | Desktop browser and editor for SQLite databases |
 
@@ -109,7 +109,41 @@ sudo dnf remove brote coigue hoot nodwyn sqlite-explorer
 
 Omit tools you did not install; aarch64 has no SQLite Explorer package.
 
-Nodwyn's Linux packages use the published portable GitHub binaries, whose `nodwyn app` opens your browser; on a Mac the cask installs the upstream app, which opens its own window. `nodwyn-egress` is a Linux executable for MCP containers on both platforms. Installation does not start a daemon. Nodwyn retains its Apache-2.0 license and NOTICE.
+Nodwyn’s amd64 Linux packages install the native GTK3/WebKitGTK 4.1 build, with a dedicated window, matching GNOME launcher and hicolor icons. ARM64 packages retain explicit browser behaviour. DEB/RPM packages refresh desktop and icon caches on installation and removal; Arch uses its standard hooks. The cask installs the upstream native Mac app. `nodwyn-egress` is a Linux executable for MCP containers on both platforms. Installation does not start a daemon. Nodwyn retains its Apache-2.0 license and NOTICE.
+
+## Arch Linux (Nodwyn, x86_64)
+
+Download the native package and its checksum manifest from the latest package set:
+
+```sh
+gh release download --repo fclaude/fclaude-packages \
+  --pattern 'nodwyn-*-x86_64.pkg.tar.zst' --pattern SHA256SUMS-archlinux-x86_64
+sha256sum --check SHA256SUMS-archlinux-x86_64
+sudo pacman -U ./nodwyn-*-x86_64.pkg.tar.zst
+```
+
+Dependencies are GTK3, WebKitGTK 4.1, libayatana-appindicator, libnotify,
+xdg-utils, hicolor-icon-theme, desktop-file-utils, Git and CA certificates.
+Install missing dependencies before `pacman -U`:
+
+```sh
+sudo pacman -S --needed gtk3 webkit2gtk-4.1 libayatana-appindicator libnotify \
+  xdg-utils hicolor-icon-theme desktop-file-utils git ca-certificates
+```
+ The reviewed recipe is
+[packaging/nodwyn/PKGBUILD](packaging/nodwyn/PKGBUILD). There is no configured
+pacman repository or automatic updater; download a newer package set to upgrade.
+Uninstall with `sudo pacman -R nodwyn`. ARM64 Arch packages are not published.
+
+For GNOME, launch and pin **nodwyn** from the application menu. Its application,
+launcher and icon identity is `com.nodwyn.app`; the launcher runs `nodwyn app`.
+A stale per-user desktop entry can override the package: update or remove that
+override and re-pin the canonical launcher. `nodwyn app --browser` remains
+available. The console names the connected daemon and execution target as
+account@host. Installation leaves running daemons alone. An existing daemon
+needs a deliberate restart on the new binary to report this identity; older
+daemons show “identity unavailable”. Upgrade and restart only the account you
+intend to use, using its own socket.
 
 ## Windows
 
@@ -136,9 +170,9 @@ Coigüe embeds Brote. Install the separate Brote package for standalone Scheme u
 
 ## Validation and maintenance
 
-CI tests native Intel and Apple Silicon Mac installs, CLI behavior, pseudo-terminal editing and Git review, the universal app bundle, and uninstall. Native amd64 and arm64 Linux jobs test installation, CLI behavior, and uninstall in Ubuntu 24.04 and Fedora 44 containers. SQLite Explorer's Linux shared-library resolution and desktop entry are checked on amd64. CI does not launch the GUI or prove Gatekeeper acceptance.
+CI tests native Intel and Apple Silicon Mac installs, CLI behavior, pseudo-terminal editing and Git review, the universal app bundle, and uninstall. Native amd64 and arm64 Linux jobs test installation, CLI behavior, and uninstall in Ubuntu 24.04 and Fedora 44 containers. SQLite Explorer's Linux shared-library resolution and desktop entry are checked on amd64. Arch CI also builds Nodwyn with makepkg, installs it, checks linkage and icons, and removes it. CI does not launch the GUI or prove Gatekeeper acceptance.
 
-Brote's and Nodwyn's Linux packages are assembled here from verified static upstream binaries. Other Linux packages are reused byte-for-byte from upstream. Licenses and Coigüe's third-party notices are preserved. See [MAINTAINING.md](MAINTAINING.md) for release updates and checks.
+Brote’s Linux packages and Nodwyn’s ARM64 packages use verified portable upstream binaries; Nodwyn’s amd64 packages use its verified native desktop release. Other Linux packages are reused byte-for-byte from upstream. Licenses and Coigüe's third-party notices are preserved. See [MAINTAINING.md](MAINTAINING.md) for release updates and checks.
 
 ## Adoption signals
 

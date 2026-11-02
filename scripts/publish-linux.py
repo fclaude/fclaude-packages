@@ -38,6 +38,17 @@ def inventory(directory):
                 raise ValueError("duplicate package name across architectures")
             files[name] = path
         files[checksum.name] = checksum
+    checksum = directory / "linux-amd64/SHA256SUMS-archlinux-x86_64"
+    if checksum.is_symlink():
+        raise ValueError("checksum manifest must be a regular file")
+    match = re.fullmatch(r"([0-9a-f]{64})  (nodwyn-[0-9.]+-[0-9]+-x86_64\.pkg\.tar\.zst)\n?", checksum.read_text())
+    if not match:
+        raise ValueError("invalid Arch package checksum")
+    path = checksum.parent / "arch" / match[2]
+    if path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest() != match[1]:
+        raise ValueError("Arch package checksum mismatch")
+    files[path.name] = path
+    files[checksum.name] = checksum
     return files
 
 

@@ -1,0 +1,23 @@
+# Maintainer: Francisco Claude-Faust <fclaude@recoded.cl>
+pkgname=nodwyn
+pkgver=0.1.13
+pkgrel=1
+pkgdesc='Personal coding agent with a native desktop console'
+arch=('x86_64')
+url='https://github.com/fclaude/nodwyn'
+license=('Apache-2.0')
+options=('!strip' '!debug')
+depends=('git' 'ca-certificates' 'gtk3' 'webkit2gtk-4.1' 'libayatana-appindicator' 'libnotify' 'xdg-utils' 'hicolor-icon-theme' 'desktop-file-utils')
+source=("https://github.com/fclaude/nodwyn/releases/download/v${pkgver}/nodwyn-linux-amd64-desktop.tar.gz")
+sha256sums=('9f55829c5ed876525ece10bfb30d22126eb34ea8dfa72b5f50d6f1de531c2c1d')
+
+package() {
+    install -Dm755 nodwyn "${pkgdir}/usr/bin/nodwyn"
+    install -Dm755 nodwyn-egress "${pkgdir}/usr/bin/nodwyn-egress"
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/nodwyn/LICENSE"
+    install -Dm644 NOTICE "${pkgdir}/usr/share/licenses/nodwyn/NOTICE"
+    install -Dm644 LINUX-DESKTOP.md "${pkgdir}/usr/share/doc/nodwyn/LINUX-DESKTOP.md"
+    install -Dm644 share/applications/com.nodwyn.app.desktop "${pkgdir}/usr/share/applications/com.nodwyn.app.desktop"
+    install -Dm644 share/icons/hicolor/scalable/apps/com.nodwyn.app.svg "${pkgdir}/usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg"
+    install -Dm644 share/icons/hicolor/512x512/apps/com.nodwyn.app.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png"
+}

@@ -4,7 +4,7 @@ platform: linux
 version: ${NODWYN_VERSION}
 release: 1
 maintainer: Francisco Claude-Faust <fclaude@recoded.cl>
-description: Personal coding agent with a browser interface
+description: Personal coding agent with a desktop console
 homepage: https://github.com/fclaude/nodwyn
 license: Apache-2.0
 section: devel
@@ -12,6 +12,10 @@ priority: optional
 depends:
   - git
   - ca-certificates
+${NODWYN_NATIVE_METADATA}
+scripts:
+  postinstall: ${NODWYN_STAGE}/refresh-caches.sh
+  postremove: ${NODWYN_STAGE}/refresh-caches.sh
 contents:
   - src: ${NODWYN_STAGE}/nodwyn
     dst: /usr/bin/nodwyn
@@ -29,3 +33,7 @@ contents:
     dst: /usr/share/nodwyn/github-release.json
   - src: ${NODWYN_STAGE}/com.nodwyn.app.desktop
     dst: /usr/share/applications/com.nodwyn.app.desktop
+  - src: ${NODWYN_STAGE}/com.nodwyn.app.svg
+    dst: /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
+  - src: ${NODWYN_STAGE}/com.nodwyn.app.png
+    dst: /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
