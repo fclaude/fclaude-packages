@@ -100,7 +100,7 @@ jobs:
           app=/Applications/Nodwyn.app
           plutil -lint "$app/Contents/Info.plist"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" = com.nodwyn.app
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.1.13
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.1.14
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' "$app/Contents/Info.plist")" = Nodwyn
           test -s "$app/Contents/Resources/Nodwyn.icns"
           lipo "$app/Contents/MacOS/nodwyn" -verify_arch x86_64 arm64
@@ -110,7 +110,7 @@ jobs:
           done
           # The command on PATH runs the app's own executable, and it is the
           # webview build: only that one holds the desktop bridge's script.
-          test "$(nodwyn version)" = 'nodwyn fb1e9b5581883bea5307d174f4621425875c3116'
+          test "$(nodwyn version)" = 'nodwyn c7685ed5e87ba4da3321370c16e843723c949487'
           strings "$app/Contents/MacOS/nodwyn" | grep -q main.desktopScript
       - name: Check uninstall
         run: |

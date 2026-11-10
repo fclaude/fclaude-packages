@@ -6,9 +6,9 @@ Packages for my tools on Mac, Ubuntu, Fedora, and Arch Linux (Nodwyn). Distribut
 
 | Tool | Version | Installs |
 | --- | --- | --- |
-| [Brote](https://github.com/fclaude/brote) | 0.9.0 | `brote` Scheme interpreter and `brote-lsp` language server |
+| [Brote](https://github.com/fclaude/brote) | 0.9.1 | `brote` Scheme interpreter and `brote-lsp` language server |
 | [Coigüe](https://github.com/fclaude/coigue) | 0.6.1 | `coigue` modal terminal editor, with embedded Brote |
-| [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.13 | `Nodwyn.app` with its own window on Mac, the `nodwyn` command and its MCP egress helper |
+| [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.14 | `Nodwyn.app` with its own window on Mac, the `nodwyn` command and its MCP egress helper |
 | [Hoot](https://github.com/fclaude/hoot) | 0.1.2 | `hoot` terminal UI for reviewing Git changes |
 | [SQLite Explorer](https://github.com/fclaude/sqlite-explorer) | 0.2.1 | Desktop browser and editor for SQLite databases |
 

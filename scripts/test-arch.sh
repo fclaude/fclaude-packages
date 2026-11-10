@@ -10,13 +10,13 @@ cp /workspace/.cache/downloads/nodwyn-linux-amd64-desktop.tar.gz "$build/"
 chown -R builder:builder "$build"
 cd "$build"
 runuser -u builder -- makepkg --nodeps --nocheck --cleanbuild
-package=nodwyn-0.1.13-1-x86_64.pkg.tar.zst
+package=nodwyn-0.1.14-1-x86_64.pkg.tar.zst
 pacman -U --noconfirm "$package"
 for binary in nodwyn nodwyn-egress; do
   expected=$(tar -xOf nodwyn-linux-amd64-desktop.tar.gz "$binary" | sha256sum | cut -d ' ' -f 1)
   printf '%s  /usr/bin/%s\n' "$expected" "$binary" | sha256sum --check -
 done
-test "$(nodwyn version)" = 'nodwyn fb1e9b5581883bea5307d174f4621425875c3116'
+test "$(nodwyn version)" = 'nodwyn c7685ed5e87ba4da3321370c16e843723c949487'
 desktop-file-validate /usr/share/applications/com.nodwyn.app.desktop
 test -s /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
 test -s /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
