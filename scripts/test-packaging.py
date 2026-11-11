@@ -58,7 +58,7 @@ class IntegrityTests(unittest.TestCase):
 
         base = root / "linux-amd64"
         (base / "arch").mkdir()
-        package = base / "arch/nodwyn-0.1.14-1-x86_64.pkg.tar.zst"
+        package = base / "arch/nodwyn-0.1.18-1-x86_64.pkg.tar.zst"
         package.write_bytes(b"verified Arch package")
         (base / "SHA256SUMS-archlinux-x86_64").write_text(
             f"{hashlib.sha256(package.read_bytes()).hexdigest()}  {package.name}\n")

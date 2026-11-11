@@ -1,6 +1,6 @@
 # Maintainer: Francisco Claude-Faust <fclaude@recoded.cl>
 pkgname=nodwyn
-pkgver=0.1.14
+pkgver=0.1.18
 pkgrel=1
 pkgdesc='Personal coding agent with a native desktop console'
 arch=('x86_64')
@@ -9,7 +9,7 @@ license=('Apache-2.0')
 options=('!strip' '!debug')
 depends=('git' 'ca-certificates' 'gtk3' 'webkit2gtk-4.1' 'libayatana-appindicator' 'libnotify' 'xdg-utils' 'hicolor-icon-theme' 'desktop-file-utils')
 source=("https://github.com/fclaude/nodwyn/releases/download/v${pkgver}/nodwyn-linux-amd64-desktop.tar.gz")
-sha256sums=('c19253846ceaaee4bdcf83587303d8d81e575e16cc5f216f860a547b633782a3')
+sha256sums=('63e0f9ef427774a31ce334ba097b98a56d5d8ed993c30bf6903a31a00760a9ab')
 
 package() {
     install -Dm755 nodwyn "${pkgdir}/usr/bin/nodwyn"
