@@ -3,7 +3,7 @@ Downloadable Ubuntu DEB, Fedora RPM and Nodwyn Arch Linux packages for Francisco
 | Tool | Version | Linux architectures |
 | --- | --- | --- |
 | Brote | 0.9.1-1 | amd64 / x86_64, arm64 / aarch64 |
-| Coigüe | 0.6.1-1 | amd64 / x86_64, arm64 / aarch64 |
+| Coigüe | 0.7.0-1 | amd64 / x86_64, arm64 / aarch64 |
 | Nodwyn | 0.1.14-1 | amd64 / x86_64, arm64 / aarch64 |
 | Hoot | 0.1.2-1 | amd64 / x86_64, arm64 / aarch64 |
 | SQLite Explorer | 0.2.1 | amd64 / x86_64 only |

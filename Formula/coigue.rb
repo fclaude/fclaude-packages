@@ -2,11 +2,11 @@ class Coigue < Formula
   desc "Small modal terminal editor with Scheme extensions"
   homepage "https://github.com/fclaude/coigue"
   if Hardware::CPU.arm?
-    url "https://github.com/fclaude/coigue/releases/download/v0.6.1/coigue_0.6.1_darwin_arm64.tar.gz"
-    sha256 "d83881ec88df9059cc3b5902ad4551caabeb43bf8dbebec579d12e3ee965360f"
+    url "https://github.com/fclaude/coigue/releases/download/v0.7.0/coigue_0.7.0_darwin_arm64.tar.gz"
+    sha256 "449d1f924df7ab06ff7cd9b2e414047428e8f8945ce07e9aa582d01b2ca655f6"
   else
-    url "https://github.com/fclaude/coigue/releases/download/v0.6.1/coigue_0.6.1_darwin_amd64.tar.gz"
-    sha256 "9de6f3df603aa2e2e8700e3eb722abece74e92663ef97ef601c4d6147f9a7dba"
+    url "https://github.com/fclaude/coigue/releases/download/v0.7.0/coigue_0.7.0_darwin_amd64.tar.gz"
+    sha256 "51d72e52eff937c3fa97a284db2b04502ff0222bf4f8fb04d8c599a2649ebff6"
   end
   license "MIT"
 

@@ -1,13 +1,13 @@
 {
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Modal terminal editor with embedded Brote",
   "homepage": "https://github.com/fclaude/coigue",
   "license": "MIT",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/fclaude/coigue/releases/download/v0.6.1/coigue_0.6.1_windows_amd64.zip",
-      "hash": "a4364a26f0d19a299a834b6d3fb3c77eb555231f381c188c560ad7cba294fc0d",
-      "extract_dir": "coigue_0.6.1_windows_amd64"
+      "url": "https://github.com/fclaude/coigue/releases/download/v0.7.0/coigue_0.7.0_windows_amd64.zip",
+      "hash": "a28588987b2f4bd5f6f8a89c4cac94c9532ab0f0a399a53c406a84c90ec1d497",
+      "extract_dir": "coigue_0.7.0_windows_amd64"
     }
   },
   "bin": "coigue.exe",
