@@ -11,6 +11,7 @@ Packages for my tools on Mac, Ubuntu, Fedora, and Arch Linux (Nodwyn). Distribut
 | [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.18 | `Nodwyn.app` with its own window on Mac, the `nodwyn` command and its MCP egress helper |
 | [Hoot](https://github.com/fclaude/hoot) | 0.1.2 | `hoot` terminal UI for reviewing Git changes |
 | [SQLite Explorer](https://github.com/fclaude/sqlite-explorer) | 0.2.1 | Desktop browser and editor for SQLite databases |
+| [Dinoscript](https://github.com/fclaude/dinoscript) | 0.1.0 | Offline programming editor and illustrated coding lessons for kids |
 
 ## Mac
 
@@ -23,7 +24,7 @@ brew tap fclaude/fclaude-packages https://github.com/fclaude/fclaude-packages.gi
 brew update
 brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 brew install --cask fclaude/fclaude-packages/sqlite-explorer
-brew install --cask fclaude/fclaude-packages/nodwyn
+brew install --cask fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
 ```
 
 Run the explicit `brew tap` command first: this repository's neutral name requires its Git URL. Install whichever tools you need. Use a macOS version supported by Homebrew; SQLite Explorer itself requires macOS 12 or newer.
@@ -40,12 +41,14 @@ Nodwyn's cask installs the upstream `Nodwyn.app`, with its own window and icon, 
 
 SQLite Explorer's universal DMG supports Intel and Apple Silicon. Version 0.2.1 is ad-hoc signed and not notarized by Apple, so Gatekeeper may block its first launch. See the upstream [signing notes](https://github.com/fclaude/sqlite-explorer/blob/v0.2.1/docs/RELEASING.md#macos-signing). This cask preserves Homebrew's normal quarantine behavior.
 
+Dinoscript installs the matching Apple Silicon or Intel app. Open Dinoscript and press **F1** for the offline tutorial. The app uses ad-hoc signing, so Gatekeeper may block the first launch. [Dinoscript with Pip PDF](https://github.com/fclaude/dinoscript/releases/download/v0.1.0/Dinoscript-with-Pip.pdf)
+
 ### Upgrade
 
 ```sh
 brew update
 brew upgrade fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-brew upgrade --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+brew upgrade --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
 ```
 
 The Hoot formula has packaging revision 1 so installations made with the earlier source-build definitions can upgrade to the binary packages without changing the upstream version.
@@ -54,7 +57,7 @@ The Hoot formula has packaging revision 1 so installations made with the earlier
 
 ```sh
 brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
 brew untap fclaude/fclaude-packages
 ```
 
@@ -147,15 +150,16 @@ intend to use, using its own socket.
 
 ## Windows
 
-Brote and Coigüe support native Windows amd64. Their Scoop manifests live in
+Brote, Coigüe, and Dinoscript support native Windows amd64. Their Scoop manifests live in
 `bucket/`, using the official versioned Windows ZIPs and SHA-256 checksums:
 
 ```powershell
 scoop bucket add fclaude https://github.com/fclaude/fclaude-packages.git
-scoop install fclaude/brote fclaude/coigue
+scoop install fclaude/brote fclaude/coigue fclaude/dinoscript
 ```
 
 Both Brote commands are installed; Coigüe retains its third-party notices.
+Dinoscript adds a Start menu shortcut and includes Pip's PDF in the installed files.
 Use Windows Terminal for Coigüe. Its upstream Explorer rename, delete and restore
 features require Linux or macOS. Package CI checks native version reporting and
 Brote evaluation; it does not exercise interactive terminal editing on Windows.

@@ -60,10 +60,10 @@ jobs:
           uname -m
           sw_vers
           brew --version
-      - name: Trust only the five packages under test
+      - name: Trust only the packages under test
         run: |
           brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-          brew trust --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+          brew trust --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
       - name: Check formula and cask style
         # shfmt has no Intel macOS bottle; lint shared files once on Apple Silicon.
         if: matrix.arch == 'Apple Silicon'
@@ -71,7 +71,7 @@ jobs:
       - name: Audit package definitions
         run: |
           brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-          brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+          brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
       - name: Install and test released binaries
         run: |
           test -z "$(brew deps --include-build fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot)"
@@ -112,6 +112,19 @@ jobs:
           # webview build: only that one holds the desktop bridge's script.
           test "$(nodwyn version)" = 'nodwyn 6bb19a4619958c2b4fde0a760fb30ec785eaf90b'
           strings "$app/Contents/MacOS/nodwyn" | grep -q main.desktopScript
+      - name: Install and verify Dinoscript
+        run: |
+          brew install --cask fclaude/fclaude-packages/dinoscript
+          app=/Applications/Dinoscript.app
+          test -x "$app/Contents/MacOS/Dinoscript"
+          for file in LICENSE NOTICE THIRD-PARTY-NOTICES.txt; do
+            test -s "$app/Contents/Resources/$file"
+          done
+          plutil -lint "$app/Contents/Info.plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" = com.fclaude.dinoscript
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.1.0
+          lipo "$app/Contents/MacOS/Dinoscript" -verify_arch "$(uname -m)"
+          codesign --verify --deep --strict "$app"
       - name: Check uninstall
         run: |
           brew uninstall --cask fclaude/fclaude-packages/sqlite-explorer
@@ -119,6 +132,8 @@ jobs:
           brew uninstall --cask fclaude/fclaude-packages/nodwyn
           test ! -e /Applications/Nodwyn.app
           test ! -e "$(brew --prefix)/bin/nodwyn"
+          brew uninstall --cask fclaude/fclaude-packages/dinoscript
+          test ! -e /Applications/Dinoscript.app
           brew uninstall fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 
   linux:

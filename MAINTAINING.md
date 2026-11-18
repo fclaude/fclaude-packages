@@ -42,20 +42,22 @@ From this repository checkout, tapped as `fclaude/fclaude-packages`:
 
 ```sh
 brew trust --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-brew trust --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+brew trust --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
 brew style Formula Casks .github/workflows/validate.yml scripts/test-linux.sh
 brew audit --strict --formula fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
-brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+brew audit --cask --online fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
 brew install fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 brew test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 brew linkage --test fclaude/fclaude-packages/brote fclaude/fclaude-packages/coigue fclaude/fclaude-packages/hoot
 python3 scripts/pty-smoke.py
-brew install --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn
+brew install --cask fclaude/fclaude-packages/sqlite-explorer fclaude/fclaude-packages/nodwyn fclaude/fclaude-packages/dinoscript
 ```
 
 For already installed packages, use `brew reinstall <formula>` or `brew reinstall --cask <cask>` to test the changed definition. The pseudo-terminal checks use temporary homes and files; Hoot never starts an agent in these tests.
 
-Homebrew 6 requires explicit trust before commands such as audit load third-party package definitions. CI trusts only the five packages under test. Fully qualified `brew install` commands grant the named package trust automatically; users do not need to trust the whole tap.
+Homebrew 6 requires explicit trust before commands such as audit load third-party package definitions. CI trusts only the packages under test. Fully qualified `brew install` commands grant the named package trust automatically; users do not need to trust the whole tap.
+
+Dinoscript has separate Apple Silicon and Intel disk images. Pin both hashes from the versioned upstream release, and verify each against GitHub's asset digest and upstream `SHA256SUMS`. CI checks the installed app's architecture, bundle identifier, version, license files, and ad-hoc signature on both platforms.
 
 The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a read-only `GITHUB_TOKEN` for validation. Pushes to `main`, pull requests and manual dispatch run validation. After all native checks pass on a main push, a separate publication job with contents-write permission publishes the exact tested Linux artifacts and checksum manifests as a new GitHub release. It does not publish bottles or update upstream repositories. Use `brew livecheck --tap=fclaude/fclaude-packages` to inspect newer releases when maintaining the tap; no scheduled updater is configured.
 
@@ -95,7 +97,7 @@ Nodwyn portable archives have flat `nodwyn`, `nodwyn-egress`, `LICENSE` and `NOT
 
 ## Windows manifests
 
-`bucket/brote.json` and `bucket/coigue.json` are native amd64 Scoop manifests.
+`bucket/brote.json`, `bucket/coigue.json`, and `bucket/dinoscript.json` are native amd64 Scoop manifests.
 Verify official release ZIP bytes against GitHub's asset digest and upstream
 SHA256SUMS, inspect the top-level directory and all license files, then change
 the version, URL, hash and extract directory together. Do not add install hooks
