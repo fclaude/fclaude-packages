@@ -15,6 +15,8 @@ cask "dinoscript" do
     strategy :github_latest
   end
 
+  depends_on :macos
+
   app "Dinoscript.app"
 
   caveats do
