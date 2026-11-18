@@ -41,7 +41,7 @@ Nodwyn's cask installs the upstream `Nodwyn.app`, with its own window and icon, 
 
 SQLite Explorer's universal DMG supports Intel and Apple Silicon. Version 0.2.1 is ad-hoc signed and not notarized by Apple, so Gatekeeper may block its first launch. See the upstream [signing notes](https://github.com/fclaude/sqlite-explorer/blob/v0.2.1/docs/RELEASING.md#macos-signing). This cask preserves Homebrew's normal quarantine behavior.
 
-Dinoscript installs the matching Apple Silicon or Intel app. Open Dinoscript and press **F1** for the offline tutorial. The app uses ad-hoc signing, so Gatekeeper may block the first launch. [Dinoscript with Pip PDF](https://github.com/fclaude/dinoscript/releases/download/v0.1.0/Dinoscript-with-Pip.pdf)
+Dinoscript installs the matching Apple Silicon or Intel app and requires macOS Ventura or later. Open Dinoscript and press **F1** for the offline tutorial. The app uses ad-hoc signing, so Gatekeeper may block the first launch. [Dinoscript with Pip PDF](https://github.com/fclaude/dinoscript/releases/download/v0.1.0/Dinoscript-with-Pip.pdf)
 
 ### Upgrade
 
