@@ -7,7 +7,7 @@ Downloadable Ubuntu DEB, Fedora RPM and Arch Linux packages for Francisco's tool
 | Nodwyn | 0.1.18-1 | amd64 / x86_64, arm64 / aarch64 |
 | Hoot | 0.1.2-1 | amd64 / x86_64, arm64 / aarch64 |
 | SQLite Explorer | 0.2.1 | amd64 / x86_64 only |
-| Dinoscript | 0.2.1-1 | amd64 / x86_64, arm64 / aarch64 |
+| Dinoscript | 0.2.2-1 | amd64 / x86_64, arm64 / aarch64 |
 
 Dinoscript installs a GNOME and KDE launcher, an icon, and the offline Pip workbook.
 Ubuntu and Fedora packages support x64 and ARM64. The Arch package supports x64.

@@ -1,12 +1,12 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.2",
   "description": "Offline programming editor and illustrated coding lessons for kids",
   "homepage": "https://github.com/fclaude/dinoscript",
   "license": "Apache-2.0",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/fclaude/dinoscript/releases/download/v0.1.0/Dinoscript-Windows-x64.zip",
-      "hash": "efa60e620dfc3ef9667370717315b3dec8238119367596adcb93efe70172d99d"
+      "url": "https://github.com/fclaude/dinoscript/releases/download/v0.2.2/Dinoscript-Windows-x64.zip",
+      "hash": "fcbbd0caa84a13fb54631e64788d1558513480d436d6735094ca5d99ff808c64"
     }
   },
   "bin": "Dinoscript.exe",
