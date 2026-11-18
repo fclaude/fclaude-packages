@@ -16,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def inventory(directory):
     files = {}
+    pin = json.loads((ROOT / "packaging/dinoscript/source.json").read_text())
+    version = f"{pin['version']}-{pin['revision']}"
     for arch in ["amd64", "arm64"]:
         checksum = directory / f"linux-{arch}" / f"SHA256SUMS-linux-{arch}"
         if checksum.is_symlink():
@@ -26,8 +28,10 @@ def inventory(directory):
             if not match or match[2] in entries:
                 raise ValueError("invalid/duplicate package checksum")
             entries[match[2]] = match[1]
-        expected_count = 10 if arch == "amd64" else 8
-        if len(entries) != expected_count:
+        rpm_arch = {"amd64": "x86_64", "arm64": "aarch64"}[arch]
+        required = {f"dinoscript_{version}_{arch}.deb", f"dinoscript-{version}.{rpm_arch}.rpm"}
+        expected_count = 12 if arch == "amd64" else 10
+        if len(entries) != expected_count or not required <= entries.keys():
             raise ValueError("package inventory is incomplete")
         for name, expected in entries.items():
             kind = name.rsplit(".", 1)[1]
@@ -41,13 +45,20 @@ def inventory(directory):
     checksum = directory / "linux-amd64/SHA256SUMS-archlinux-x86_64"
     if checksum.is_symlink():
         raise ValueError("checksum manifest must be a regular file")
-    match = re.fullmatch(r"([0-9a-f]{64})  (nodwyn-[0-9.]+-[0-9]+-x86_64\.pkg\.tar\.zst)\n?", checksum.read_text())
-    if not match:
-        raise ValueError("invalid Arch package checksum")
-    path = checksum.parent / "arch" / match[2]
-    if path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest() != match[1]:
-        raise ValueError("Arch package checksum mismatch")
-    files[path.name] = path
+    entries = {}
+    for line in checksum.read_text().splitlines():
+        match = re.fullmatch(r"([0-9a-f]{64})  ((dinoscript|nodwyn)-[0-9.]+-[0-9]+-x86_64\.pkg\.tar\.zst)", line)
+        if not match or match[3] in entries:
+            raise ValueError("invalid Arch package checksum")
+        entries[match[3]] = (match[2], match[1])
+    if (entries.keys() != {"dinoscript", "nodwyn"}
+            or entries["dinoscript"][0] != f"dinoscript-{version}-x86_64.pkg.tar.zst"):
+        raise ValueError("Arch package inventory is incomplete")
+    for name, expected in entries.values():
+        path = checksum.parent / "arch" / name
+        if path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise ValueError("Arch package checksum mismatch: " + name)
+        files[name] = path
     files[checksum.name] = checksum
     return files
 

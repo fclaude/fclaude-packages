@@ -4,6 +4,7 @@
 import hashlib
 import importlib.util
 import io
+import json
 from pathlib import Path
 import tarfile
 import tempfile
@@ -46,22 +47,28 @@ class IntegrityTests(unittest.TestCase):
             self.assertEqual((root / "binary").stat().st_mode & 0o777, 0o755)
 
     def fixture(self, root):
-        for arch, count in [("amd64", 10), ("arm64", 8)]:
+        pin = json.loads((publish.ROOT / "packaging/dinoscript/source.json").read_text())
+        version = f"{pin['version']}-{pin['revision']}"
+        for arch, count, rpm_arch in [("amd64", 10, "x86_64"), ("arm64", 8, "aarch64")]:
             base = root / f"linux-{arch}"
-            (base / "deb").mkdir(parents=True)
+            names = [f"fixture{number}_{arch}.deb" for number in range(count)]
+            names += [f"dinoscript_{version}_{arch}.deb", f"dinoscript-{version}.{rpm_arch}.rpm"]
             entries = []
-            for number in range(count):
-                path = base / "deb" / f"fixture{number}_{arch}.deb"
+            for name in names:
+                path = base / name.rsplit(".", 1)[1] / name
+                path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(b"verified package")
                 entries.append(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.name}\n")
             (base / f"SHA256SUMS-linux-{arch}").write_text("".join(entries))
 
         base = root / "linux-amd64"
         (base / "arch").mkdir()
-        package = base / "arch/nodwyn-0.1.18-1-x86_64.pkg.tar.zst"
-        package.write_bytes(b"verified Arch package")
-        (base / "SHA256SUMS-archlinux-x86_64").write_text(
-            f"{hashlib.sha256(package.read_bytes()).hexdigest()}  {package.name}\n")
+        entries = []
+        for name in ["nodwyn-0.1.18-1-x86_64.pkg.tar.zst", f"dinoscript-{version}-x86_64.pkg.tar.zst"]:
+            package = base / "arch" / name
+            package.write_bytes(b"verified Arch package")
+            entries.append(f"{hashlib.sha256(package.read_bytes()).hexdigest()}  {name}\n")
+        (base / "SHA256SUMS-archlinux-x86_64").write_text("".join(entries))
 
     def test_publisher_rejects_modified_arch_package(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -75,7 +82,17 @@ class IntegrityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self.fixture(root)
-            self.assertEqual(len(publish.inventory(root)), 22)
+            self.assertEqual(len(publish.inventory(root)), 27)
+
+    def test_publisher_rejects_missing_arch_dinoscript(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.fixture(root)
+            manifest = root / "linux-amd64/SHA256SUMS-archlinux-x86_64"
+            manifest.write_text("".join(line for line in manifest.read_text().splitlines(keepends=True)
+                                        if "dinoscript" not in line))
+            with self.assertRaisesRegex(ValueError, "Arch package inventory is incomplete"):
+                publish.inventory(root)
 
     def test_publisher_rejects_modified_package(self):
         with tempfile.TemporaryDirectory() as directory:

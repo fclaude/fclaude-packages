@@ -4,7 +4,7 @@ set -euo pipefail
 
 format=${1:?usage: test-linux.sh deb|rpm amd64|arm64}
 arch=${2:?usage: test-linux.sh deb|rpm amd64|arm64}
-packages=(brote coigue hoot nodwyn)
+packages=(brote coigue hoot nodwyn dinoscript)
 if [[ "${arch}" == amd64 ]]
 then
   packages+=(sqlite-explorer)
@@ -16,11 +16,11 @@ case "${format}" in
     # Ubuntu's minimal container excludes docs by default; retain package notices for this check.
     printf 'path-include=/usr/share/doc/*\n' >/etc/dpkg/dpkg.cfg.d/zz-package-docs
     apt-get update -qq
-    apt-get install -y --no-install-recommends python3 git binutils desktop-file-utils /packages/deb/*.deb
+    apt-get install -y --no-install-recommends python3 git binutils desktop-file-utils libglib2.0-bin xvfb xdotool /packages/deb/*.deb
     dpkg-query -W "${packages[@]}"
     ;;
   rpm)
-    dnf install -y python3 git binutils desktop-file-utils /packages/rpm/*.rpm
+    dnf install -y python3 git binutils desktop-file-utils glib2 xorg-x11-server-Xvfb xdotool /packages/rpm/*.rpm
     rpm -V "${packages[@]}"
     ;;
   *)
@@ -100,13 +100,25 @@ then
   fi
 fi
 
+bash /workspace/scripts/test-dinoscript.sh
+if [[ "${format}" == deb ]]
+then
+  test -s /usr/share/doc/dinoscript/copyright
+  test -s /usr/share/doc/dinoscript/NOTICE
+  test -s /usr/share/doc/dinoscript/THIRD-PARTY-NOTICES.txt
+else
+  test -s /usr/share/licenses/dinoscript/LICENSE
+  test -s /usr/share/licenses/dinoscript/NOTICE
+  test -s /usr/share/licenses/dinoscript/THIRD-PARTY-NOTICES.txt
+fi
+
 case "${format}" in
   deb) apt-get remove -y "${packages[@]}" ;;
   rpm) dnf remove -y "${packages[@]}" ;;
   *) exit 2 ;;
 esac
 hash -r
-for package in brote brote-lsp coigue hoot nodwyn nodwyn-egress
+for package in brote brote-lsp coigue hoot nodwyn nodwyn-egress dinoscript
 do
   if command -v "${package}"
   then
@@ -121,4 +133,7 @@ fi
 test ! -e /usr/share/applications/com.nodwyn.app.desktop
 test ! -e /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
 test ! -e /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
+test ! -e /usr/share/applications/com.fclaude.dinoscript.desktop
+test ! -e /usr/share/icons/hicolor/scalable/apps/com.fclaude.dinoscript.svg
+test ! -e /usr/share/dinoscript/Dinoscript-with-Pip.pdf
 echo "Install, functional checks, and uninstall passed: ${format} ${arch}"

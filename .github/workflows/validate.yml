@@ -155,6 +155,24 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+      - name: Read the pinned Dinoscript source commit
+        id: dinoscript
+        run: |
+          commit="$(jq -er '.commit' packaging/dinoscript/source.json)"
+          [[ "$commit" =~ ^[0-9a-f]{40}$ ]]
+          printf 'commit=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+      - name: Check out the Dinoscript release source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: fclaude/dinoscript
+          ref: ${{ steps.dinoscript.outputs.commit }}
+          path: build/dinoscript-source
+          persist-credentials: false
+      - name: Set up Go for the pinned Dinoscript source
+        uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5
+        with:
+          go-version-file: build/dinoscript-source/go.mod
+          cache-dependency-path: build/dinoscript-source/go.sum
       - name: Check packaging integrity guards
         run: python3 scripts/test-packaging.py
       - name: Verify upstream assets and build release packages
@@ -171,7 +189,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace:ro" \
             -v "$GITHUB_WORKSPACE/dist/linux/$PACKAGE_ARCH:/packages:ro" \
             fedora:44 bash /workspace/scripts/test-linux.sh rpm "$PACKAGE_ARCH"
-      - name: Build and test the Arch Linux native package
+      - name: Validate the native Arch Linux packages
         if: matrix.arch == 'amd64'
         run: |
           docker run --rm \

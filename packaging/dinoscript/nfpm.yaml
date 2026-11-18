@@ -1,0 +1,74 @@
+name: dinoscript
+arch: ${PACKAGE_ARCH}
+platform: linux
+version: ${DINOSCRIPT_VERSION}
+release: ${DINOSCRIPT_REVISION}
+maintainer: Francisco Claude-Faust <fclaude@recoded.cl>
+description: Offline coding editor and illustrated lessons for kids
+homepage: https://dinoscript.org
+license: Apache-2.0
+section: education
+priority: optional
+overrides:
+  deb:
+    depends:
+      - hicolor-icon-theme
+      - libx11-6
+      - libgl1
+      - libgl1-mesa-dri
+      - xwayland
+  rpm:
+    depends:
+      - hicolor-icon-theme
+      - libX11
+      - libglvnd-glx
+      - mesa-dri-drivers
+      - xorg-x11-server-Xwayland
+  archlinux:
+    depends:
+      - hicolor-icon-theme
+      - libx11
+      - libglvnd
+      - mesa
+      - xorg-xwayland
+contents:
+  - src: ${DINOSCRIPT_BINARY}
+    dst: /usr/bin/dinoscript
+    file_info:
+      mode: 0755
+  - src: ${DINOSCRIPT_RECIPE}/com.fclaude.dinoscript.desktop
+    dst: /usr/share/applications/com.fclaude.dinoscript.desktop
+  - src: ${DINOSCRIPT_RECIPE}/com.fclaude.dinoscript.svg
+    dst: /usr/share/icons/hicolor/scalable/apps/com.fclaude.dinoscript.svg
+  - src: ${DINOSCRIPT_SOURCE}/book/Dinoscript-with-Pip.pdf
+    dst: /usr/share/dinoscript/Dinoscript-with-Pip.pdf
+  - src: ${DINOSCRIPT_SOURCE}/LICENSE
+    dst: /usr/share/doc/dinoscript/copyright
+    packager: deb
+  - src: ${DINOSCRIPT_SOURCE}/NOTICE
+    dst: /usr/share/doc/dinoscript/NOTICE
+    packager: deb
+  - src: ${DINOSCRIPT_SOURCE}/release/THIRD-PARTY-NOTICES.txt
+    dst: /usr/share/doc/dinoscript/THIRD-PARTY-NOTICES.txt
+    packager: deb
+  - src: ${DINOSCRIPT_SOURCE}/LICENSE
+    dst: /usr/share/licenses/dinoscript/LICENSE
+    packager: rpm
+    type: license
+  - src: ${DINOSCRIPT_SOURCE}/NOTICE
+    dst: /usr/share/licenses/dinoscript/NOTICE
+    packager: rpm
+    type: license
+  - src: ${DINOSCRIPT_SOURCE}/release/THIRD-PARTY-NOTICES.txt
+    dst: /usr/share/licenses/dinoscript/THIRD-PARTY-NOTICES.txt
+    packager: rpm
+    type: license
+  - src: ${DINOSCRIPT_SOURCE}/LICENSE
+    dst: /usr/share/licenses/dinoscript/LICENSE
+    packager: archlinux
+  - src: ${DINOSCRIPT_SOURCE}/NOTICE
+    dst: /usr/share/licenses/dinoscript/NOTICE
+    packager: archlinux
+  - src: ${DINOSCRIPT_SOURCE}/release/THIRD-PARTY-NOTICES.txt
+    dst: /usr/share/licenses/dinoscript/THIRD-PARTY-NOTICES.txt
+    packager: archlinux

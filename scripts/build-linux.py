@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify upstream packages and build Brote/Nodwyn DEB/RPM from release binaries."""
+"""Build and verify the downloadable Linux packages."""
 
 import argparse
 import hashlib
@@ -56,10 +56,51 @@ def extract_file(archive, member, destination, executable=False):
     os.utime(destination, (1793059200, 1793059200))
 
 
+def prepare_dinoscript(nfpm_archive, source, arch, output):
+    recipe = ROOT / "packaging/dinoscript"
+    pin = json.loads((recipe / "source.json").read_text())
+    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=source, text=True).strip()
+    changes = subprocess.check_output(["git", "status", "--porcelain"], cwd=source, text=True)
+    if revision != pin["commit"] or changes:
+        raise ValueError("Dinoscript must be a clean checkout of the pinned release commit")
+
+    with tempfile.TemporaryDirectory(prefix="dinoscript-package-") as directory:
+        stage = Path(directory)
+        nfpm = stage / "nfpm"
+        extract_file(nfpm_archive, "nfpm", nfpm, executable=True)
+        binary = stage / "dinoscript"
+        build_env = dict(os.environ, CGO_ENABLED="0", GOOS="linux", GOARCH=arch, GOWORK="off")
+        subprocess.run([
+            "go", "build", "-mod=readonly", "-trimpath", "-buildvcs=false",
+            "-o", str(binary), "./cmd/dinoscript",
+        ], cwd=source, env=build_env, check=True)
+        config = stage / "nfpm.yaml"
+        version = f"{pin['version']}-{pin['revision']}"
+        env = dict(os.environ, PACKAGE_ARCH=arch, SOURCE_DATE_EPOCH="1793059200",
+                   DINOSCRIPT_VERSION=pin["version"], DINOSCRIPT_REVISION=str(pin["revision"]),
+                   DINOSCRIPT_BINARY=str(binary), DINOSCRIPT_RECIPE=str(recipe), DINOSCRIPT_SOURCE=str(source))
+        config.write_text(Template((recipe / "nfpm.yaml").read_text()).substitute(env))
+        rpm_arch = {"amd64": "x86_64", "arm64": "aarch64"}[arch]
+        targets = {
+            "deb": output / "deb" / f"dinoscript_{version}_{arch}.deb",
+            "rpm": output / "rpm" / f"dinoscript-{version}.{rpm_arch}.rpm",
+        }
+        if arch == "amd64":
+            targets["archlinux"] = output / "arch" / f"dinoscript-{version}-x86_64.pkg.tar.zst"
+        for kind, path in targets.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            subprocess.run([
+                str(nfpm), "package", "--config", str(config),
+                "--packager", kind, "--target", str(path),
+            ], env=env, check=True)
+        return [targets["deb"], targets["rpm"]]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arch", choices=["amd64", "arm64"], required=True)
     parser.add_argument("--output", type=Path, default=ROOT / "dist/linux")
+    parser.add_argument("--dinoscript-source", type=Path, default=ROOT / "build/dinoscript-source")
     parser.add_argument("--cache", type=Path, default=ROOT / ".cache/downloads")
     args = parser.parse_args()
     if platform.system() != "Linux":
@@ -73,6 +114,13 @@ def main():
     manifest = json.loads((ROOT / "packaging/linux/releases.json").read_text())
     if manifest["schema"] != 1:
         raise ValueError("unsupported manifest schema")
+    host = {"aarch64": "arm64", "x86_64": "x86_64"}.get(platform.machine())
+    if host not in NFPM_SHA256:
+        raise ValueError(f"unsupported packaging host: {platform.machine()}")
+    nfpm_archive = fetch(
+        f"https://github.com/goreleaser/nfpm/releases/download/v{NFPM_VERSION}/"
+        f"nfpm_{NFPM_VERSION}_Linux_{host}.tar.gz", NFPM_SHA256[host], cache,
+    )
     artifacts = []
     for asset in manifest["assets"]:
         if asset["arch"] != args.arch:
@@ -84,13 +132,6 @@ def main():
             artifacts.append(destination)
             continue
 
-        host = {"aarch64": "arm64", "x86_64": "x86_64"}.get(platform.machine())
-        if host not in NFPM_SHA256:
-            raise ValueError(f"unsupported packaging host: {platform.machine()}")
-        nfpm_archive = fetch(
-            f"https://github.com/goreleaser/nfpm/releases/download/v{NFPM_VERSION}/"
-            f"nfpm_{NFPM_VERSION}_Linux_{host}.tar.gz", NFPM_SHA256[host], cache,
-        )
         project = asset["package"]
         with tempfile.TemporaryDirectory(prefix=f"{project}-package-") as directory:
             stage = Path(directory)
@@ -158,6 +199,7 @@ def main():
                 ], env=env, check=True)
                 artifacts.append(destination)
 
+    artifacts.extend(prepare_dinoscript(nfpm_archive, args.dinoscript_source.resolve(), args.arch, output))
     checksum_path = output / f"SHA256SUMS-linux-{args.arch}"
     checksum_path.write_text("".join(f"{digest(p)}  {p.name}\n" for p in sorted(artifacts)))
     print(f"Prepared {len(artifacts)} packages for {args.arch}: {output}")

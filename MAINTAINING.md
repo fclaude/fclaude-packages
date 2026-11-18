@@ -65,18 +65,26 @@ The workflow uses macOS 15 on native Apple Silicon and Intel runners, with a rea
 
 `packaging/linux/releases.json` pins versioned upstream assets and SHA256 checksums. Keep Coigüe, Hoot and SQLite Explorer DEB/RPM files unchanged; Brote and ARM64 Nodwyn are packaged from their portable Linux tarballs; amd64 Nodwyn uses its native desktop tarball using their respective nFPM recipes. Nodwyn preserves both executables next to each other, LICENSE, NOTICE and source provenance. Its amd64 launcher and icons come from the verified native archive. ARM64 uses reviewed copies of the same upstream icons and launcher, retaining browser mode. The build script downloads a pinned, checksum-verified nFPM 2.48.0 binary into the ignored local cache. No system installation, signing key, or external hosting account is needed.
 
-Run on Linux with Python 3.11 or newer:
+Dinoscript builds its desktop executable from the clean checkout pinned in
+`packaging/dinoscript/source.json`. Keep the commit and version aligned with the
+upstream release, and increment the revision for packaging-only changes. The same
+nFPM recipe installs the launcher, icon, printable workbook and notices on all
+three distros.
+
+Run on Linux with Python 3.11 or newer and the Go version in Dinoscript’s `go.mod`:
 
 ```sh
+git clone https://github.com/fclaude/dinoscript.git build/dinoscript-source
+git -C build/dinoscript-source checkout --detach "$(jq -r .commit packaging/dinoscript/source.json)"
 python3 scripts/build-linux.py --arch amd64
 python3 scripts/build-linux.py --arch arm64
 ```
 
-Output is `dist/linux/<arch>/{deb,rpm}/` plus `SHA256SUMS-linux-<arch>`. Brote includes both commands and its MIT license. File metadata uses a fixed source date for package builds. SQLite Explorer is omitted on ARM64 because no upstream package exists.
+Output is `dist/linux/<arch>/{deb,rpm}/` plus `SHA256SUMS-linux-<arch>`. Brote includes both commands and its MIT license. File metadata uses a fixed source date for package builds. SQLite Explorer is omitted on ARM64 because no upstream package exists. The amd64 build also puts the Dinoscript Arch package in `dist/linux/amd64/arch/`.
 
 For an update, verify the upstream `SHA256SUMS` and GitHub asset digests against actual downloaded files, update the manifest URLs/checksums/versions, and review the package metadata, dependencies, architecture and installed license paths. Never silently accept changed bytes under an old release. A packaging-only Brote update also needs an incremented `release` in the nFPM recipe and corresponding output filenames in the build script. Update the README package-set tag when publishing a new set.
 
-CI uses native Ubuntu amd64 and ARM64 runners. Each creates that architecture's packages, then tests install, CLI behavior, terminal restoration, and uninstall in Ubuntu 24.04 and Fedora 44 containers. The amd64 jobs additionally validate SQLite Explorer's desktop entry, license and shared-library resolution; they do not launch its GUI. Ubuntu container tests explicitly retain package documentation, which minimal Ubuntu images otherwise exclude. The same tests can be run locally:
+CI uses native Ubuntu amd64 and ARM64 runners. Each creates that architecture's packages, then tests install, CLI behavior, terminal restoration, and uninstall in Ubuntu 24.04 and Fedora 44 containers. The amd64 jobs additionally validate SQLite Explorer's desktop entry, license and shared-library resolution; they do not launch its GUI. Ubuntu container tests explicitly retain package documentation, which minimal Ubuntu images otherwise exclude. All three distros launch Dinoscript via its installed desktop entry on Xvfb and check that its window opens and closes. The same tests can be run locally:
 
 ```sh
 docker run --rm -v "$PWD:/workspace:ro" -v "$PWD/dist/linux/amd64:/packages:ro" \
@@ -87,7 +95,7 @@ docker run --rm -v "$PWD:/workspace:ro" -v "$PWD/dist/linux/amd64:/packages:ro" 
 
 Use a native ARM64 Docker host and change the mounted output path and final argument to `arm64` to repeat on ARM64. Do not treat metadata inspection or emulation alone as proof of a native install.
 
-Successful CI uploads `linux-amd64` (DEB, RPM and Arch) and `linux-arm64` (DEB and RPM) artifacts. The Arch package has a separate `SHA256SUMS-archlinux-x86_64` manifest. Main pushes publish a new `packages-YYYY-MM-DD-RUN` release only after both Mac and both Linux matrix jobs pass. The publisher checks artifact inventory and checksums, refuses a superseded main commit, uploads a draft, verifies GitHub asset hashes, and then publishes. Previously published assets are never replaced. A retry can replace only its own draft. README download commands select the latest published set.
+Successful CI uploads `linux-amd64` (DEB, RPM and Arch) and `linux-arm64` (DEB and RPM) artifacts. The Arch packages share a separate `SHA256SUMS-archlinux-x86_64` manifest. Main pushes publish a new `packages-YYYY-MM-DD-RUN` release only after both Mac and both Linux matrix jobs pass. The publisher checks artifact inventory and checksums, refuses a superseded main commit, uploads a draft, verifies GitHub asset hashes, and then publishes. Previously published assets are never replaced. A retry can replace only its own draft. README download commands select the latest published set.
 
 Hosting signed APT/DNF repositories, adding signing keys, and configuring external accounts are separate work. Public GitHub releases provide downloadable local packages without those services.
 
