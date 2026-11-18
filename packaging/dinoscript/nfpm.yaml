@@ -36,10 +36,12 @@ contents:
     dst: /usr/bin/dinoscript
     file_info:
       mode: 0755
-  - src: ${DINOSCRIPT_RECIPE}/com.fclaude.dinoscript.desktop
+  - src: ${DINOSCRIPT_SOURCE}/release/com.fclaude.dinoscript.desktop
     dst: /usr/share/applications/com.fclaude.dinoscript.desktop
-  - src: ${DINOSCRIPT_RECIPE}/com.fclaude.dinoscript.svg
-    dst: /usr/share/icons/hicolor/scalable/apps/com.fclaude.dinoscript.svg
+  - src: ${DINOSCRIPT_SOURCE}/internal/desktop/pip.png
+    dst: /usr/share/icons/hicolor/128x128/apps/com.fclaude.dinoscript.png
+  - src: ${DINOSCRIPT_SOURCE}/release/pip.png
+    dst: /usr/share/icons/hicolor/512x512@2/apps/com.fclaude.dinoscript.png
   - src: ${DINOSCRIPT_SOURCE}/book/Dinoscript-with-Pip.pdf
     dst: /usr/share/dinoscript/Dinoscript-with-Pip.pdf
   - src: ${DINOSCRIPT_SOURCE}/LICENSE

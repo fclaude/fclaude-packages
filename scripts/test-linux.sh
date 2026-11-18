@@ -134,6 +134,7 @@ test ! -e /usr/share/applications/com.nodwyn.app.desktop
 test ! -e /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
 test ! -e /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
 test ! -e /usr/share/applications/com.fclaude.dinoscript.desktop
-test ! -e /usr/share/icons/hicolor/scalable/apps/com.fclaude.dinoscript.svg
+test ! -e /usr/share/icons/hicolor/128x128/apps/com.fclaude.dinoscript.png
+test ! -e /usr/share/icons/hicolor/512x512@2/apps/com.fclaude.dinoscript.png
 test ! -e /usr/share/dinoscript/Dinoscript-with-Pip.pdf
 echo "Install, functional checks, and uninstall passed: ${format} ${arch}"

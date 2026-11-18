@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Dinoscript
-Comment=Learn to code with Pip the triceratops
-Exec=dinoscript
-Icon=com.fclaude.dinoscript
-Terminal=false
-Categories=Education;
-StartupWMClass=com.fclaude.dinoscript

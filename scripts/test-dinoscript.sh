@@ -4,7 +4,9 @@ set -euo pipefail
 
 launcher=/usr/share/applications/com.fclaude.dinoscript.desktop
 desktop-file-validate "$launcher"
-test -s /usr/share/icons/hicolor/scalable/apps/com.fclaude.dinoscript.svg
+grep -Fxq 'Icon=com.fclaude.dinoscript' "$launcher"
+test -s /usr/share/icons/hicolor/128x128/apps/com.fclaude.dinoscript.png
+test -s /usr/share/icons/hicolor/512x512@2/apps/com.fclaude.dinoscript.png
 test -s /usr/share/dinoscript/Dinoscript-with-Pip.pdf
 
 scratch=$(mktemp -d)

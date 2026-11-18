@@ -78,7 +78,7 @@ def prepare_dinoscript(nfpm_archive, source, arch, output):
         version = f"{pin['version']}-{pin['revision']}"
         env = dict(os.environ, PACKAGE_ARCH=arch, SOURCE_DATE_EPOCH="1793059200",
                    DINOSCRIPT_VERSION=pin["version"], DINOSCRIPT_REVISION=str(pin["revision"]),
-                   DINOSCRIPT_BINARY=str(binary), DINOSCRIPT_RECIPE=str(recipe), DINOSCRIPT_SOURCE=str(source))
+                   DINOSCRIPT_BINARY=str(binary), DINOSCRIPT_SOURCE=str(source))
         config.write_text(Template((recipe / "nfpm.yaml").read_text()).substitute(env))
         rpm_arch = {"amd64": "x86_64", "arm64": "aarch64"}[arch]
         targets = {
