@@ -11,15 +11,15 @@ cp /workspace/.cache/downloads/nodwyn-linux-amd64-desktop.tar.gz "$build/"
 chown -R builder:builder "$build"
 cd "$build"
 runuser -u builder -- makepkg --nodeps --nocheck --cleanbuild
-package=nodwyn-0.1.18-1-x86_64.pkg.tar.zst
+package=nodwyn-0.1.19-1-x86_64.pkg.tar.zst
 pacman -U --noconfirm "$package"
 for binary in nodwyn nodwyn-egress; do
   expected=$(tar -xOf nodwyn-linux-amd64-desktop.tar.gz "$binary" | sha256sum | cut -d ' ' -f 1)
   printf '%s  /usr/bin/%s\n' "$expected" "$binary" | sha256sum --check -
 done
-test "$(nodwyn version)" = 'nodwyn 6bb19a4619958c2b4fde0a760fb30ec785eaf90b'
+test "$(nodwyn version)" = 'nodwyn 921aae2b91552fc521aaae1b8a77d4c1f7479e45'
 desktop-file-validate /usr/share/applications/com.nodwyn.app.desktop
-test -s /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
+test ! -e /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
 test -s /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
 ldd /usr/bin/nodwyn >linkage.txt
 cat linkage.txt
@@ -29,6 +29,7 @@ pacman -R --noconfirm nodwyn
 test ! -e /usr/bin/nodwyn
 test ! -e /usr/share/applications/com.nodwyn.app.desktop
 test ! -e /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
+test ! -e /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
 mkdir -p /packages/arch
 cp "$package" /packages/arch/
 cd /packages/arch

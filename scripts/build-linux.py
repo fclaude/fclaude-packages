@@ -146,11 +146,10 @@ def main():
                 (stage / "github-release.json").write_text(json.dumps(asset, indent=2) + "\n")
                 if asset.get("native"):
                     extract_file(archive, "share/applications/com.nodwyn.app.desktop", stage / "com.nodwyn.app.desktop")
-                    for size, extension in [("scalable", "svg"), ("512x512", "png")]:
-                        extract_file(archive, f"share/icons/hicolor/{size}/apps/com.nodwyn.app.{extension}",
-                                     stage / f"com.nodwyn.app.{extension}")
+                    extract_file(archive, "share/icons/hicolor/512x512/apps/com.nodwyn.app.png",
+                                 stage / "com.nodwyn.app.png")
                 else:
-                    for name in ["com.nodwyn.app.desktop", "com.nodwyn.app.svg", "com.nodwyn.app.png"]:
+                    for name in ["com.nodwyn.app.desktop", "com.nodwyn.app.png"]:
                         shutil.copyfile(ROOT / "packaging/nodwyn" / name, stage / name)
                 shutil.copyfile(ROOT / "packaging/nodwyn/refresh-caches.sh", stage / "refresh-caches.sh")
             for name in names:

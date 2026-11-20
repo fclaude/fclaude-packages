@@ -35,14 +35,14 @@ brote-lsp --version
 coigue --version
 hoot --version
 nodwyn_version=$(nodwyn version)
-test "${nodwyn_version}" = 'nodwyn 6bb19a4619958c2b4fde0a760fb30ec785eaf90b'
+test "${nodwyn_version}" = 'nodwyn 921aae2b91552fc521aaae1b8a77d4c1f7479e45'
 test -x /usr/bin/nodwyn-egress
 test -f /usr/share/doc/nodwyn/copyright
 test -f /usr/share/doc/nodwyn/NOTICE
 desktop-file-validate /usr/share/applications/com.nodwyn.app.desktop
 grep -qx 'Icon=com.nodwyn.app' /usr/share/applications/com.nodwyn.app.desktop
 grep -qx 'StartupWMClass=com.nodwyn.app' /usr/share/applications/com.nodwyn.app.desktop
-test -s /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
+test ! -e /usr/share/icons/hicolor/scalable/apps/com.nodwyn.app.svg
 test -s /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
 if [[ "${arch}" == amd64 ]]
 then
@@ -59,8 +59,8 @@ python3 - <<'PY'
 import json
 from pathlib import Path
 metadata = json.loads(Path('/usr/share/nodwyn/github-release.json').read_text())
-assert metadata['source_sha'] == '6bb19a4619958c2b4fde0a760fb30ec785eaf90b'
-assert metadata['version'] == '0.1.18'
+assert metadata['source_sha'] == '921aae2b91552fc521aaae1b8a77d4c1f7479e45'
+assert metadata['version'] == '0.1.19'
 PY
 hoot --print-keymap >/tmp/hoot-keymap.md
 grep -q Quit /tmp/hoot-keymap.md

@@ -64,7 +64,7 @@ class IntegrityTests(unittest.TestCase):
         base = root / "linux-amd64"
         (base / "arch").mkdir()
         entries = []
-        for name in ["nodwyn-0.1.18-1-x86_64.pkg.tar.zst", f"dinoscript-{version}-x86_64.pkg.tar.zst"]:
+        for name in ["nodwyn-0.1.19-1-x86_64.pkg.tar.zst", f"dinoscript-{version}-x86_64.pkg.tar.zst"]:
             package = base / "arch" / name
             package.write_bytes(b"verified Arch package")
             entries.append(f"{hashlib.sha256(package.read_bytes()).hexdigest()}  {name}\n")
