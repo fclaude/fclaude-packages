@@ -11,7 +11,7 @@ Packages for my tools on Mac, Ubuntu, Fedora, Arch Linux, and Windows. Distribut
 | [Nodwyn](https://github.com/fclaude/nodwyn) | 0.1.19 | `Nodwyn.app` with its own window on Mac, the `nodwyn` command and its MCP egress helper |
 | [Hoot](https://github.com/fclaude/hoot) | 0.1.2 | `hoot` terminal UI for reviewing Git changes |
 | [SQLite Explorer](https://github.com/fclaude/sqlite-explorer) | 0.2.1 | Desktop browser and editor for SQLite databases |
-| [Dinoscript](https://github.com/fclaude/dinoscript) | 0.5.1 | Offline programming editor and illustrated coding lessons for kids |
+| [Dinoscript](https://github.com/fclaude/dinoscript) | 0.7.0 | Offline programming editor and illustrated coding lessons for kids |
 
 ## Mac
 
@@ -41,7 +41,7 @@ Nodwyn's cask installs the upstream `Nodwyn.app`, with its own window and icon, 
 
 SQLite Explorer's universal DMG supports Intel and Apple Silicon. Version 0.2.1 is ad-hoc signed and not notarized by Apple, so Gatekeeper may block its first launch. See the upstream [signing notes](https://github.com/fclaude/sqlite-explorer/blob/v0.2.1/docs/RELEASING.md#macos-signing). This cask preserves Homebrew's normal quarantine behavior.
 
-Dinoscript installs the matching Apple Silicon or Intel app and requires macOS Ventura or later. Open Dinoscript and press **F1** for the offline tutorial. The app uses ad-hoc signing, so Gatekeeper may block the first launch. [Dinoscript with Pip PDF](https://github.com/fclaude/dinoscript/releases/download/v0.5.1/Dinoscript-with-Pip.pdf)
+Dinoscript installs the matching Apple Silicon or Intel app and requires macOS Ventura or later. Open Dinoscript and press **F1** for the offline tutorial. The app uses ad-hoc signing, so Gatekeeper may block the first launch. [Dinoscript with Pip PDF](https://github.com/fclaude/dinoscript/releases/download/v0.7.0/Dinoscript-with-Pip.pdf)
 
 ### Upgrade
 
@@ -153,7 +153,7 @@ intend to use, using its own socket.
 
 After installing the Ubuntu, Fedora, or Arch package, open **Dinoscript** from the
 GNOME or KDE application menu. It uses X11 or XWayland and includes the offline
-lessons and printable PDF. Press **F1** in the editor for the lessons. Download
+lessons and printable workbooks in English, Spanish, and Polish. Press **F1** in the editor for the lessons. Download
 the package for your computer from [dinoscript.org](https://dinoscript.org/#downloads).
 
 ## Windows
@@ -167,7 +167,7 @@ scoop install fclaude/brote fclaude/coigue fclaude/dinoscript
 ```
 
 Both Brote commands are installed; Coigüe retains its third-party notices.
-Dinoscript adds a Start menu shortcut and includes Pip's PDF in the installed files.
+Dinoscript adds a Start menu shortcut and includes Pip's printable workbooks in English, Spanish, and Polish.
 Use Windows Terminal for Coigüe. Its upstream Explorer rename, delete and restore
 features require Linux or macOS. Package CI checks native version reporting and
 Brote evaluation; it does not exercise interactive terminal editing on Windows.

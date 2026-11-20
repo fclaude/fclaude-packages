@@ -46,5 +46,7 @@ test ! -e /usr/bin/dinoscript
 test ! -e /usr/share/applications/com.fclaude.dinoscript.desktop
 test ! -e /usr/share/icons/hicolor/128x128/apps/com.fclaude.dinoscript.png
 test ! -e /usr/share/icons/hicolor/512x512@2/apps/com.fclaude.dinoscript.png
-test ! -e /usr/share/dinoscript/Dinoscript-with-Pip.pdf
+for workbook in Dinoscript-with-Pip.pdf Dinoscript-con-Pip.pdf Dinoscript-z-Pip.pdf; do
+  test ! -e "/usr/share/dinoscript/$workbook"
+done
 sha256sum "${dinoscript[0]}" "$package" >../SHA256SUMS-archlinux-x86_64

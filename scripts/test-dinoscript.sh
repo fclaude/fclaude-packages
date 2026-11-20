@@ -7,7 +7,9 @@ desktop-file-validate "$launcher"
 grep -Fxq 'Icon=com.fclaude.dinoscript' "$launcher"
 test -s /usr/share/icons/hicolor/128x128/apps/com.fclaude.dinoscript.png
 test -s /usr/share/icons/hicolor/512x512@2/apps/com.fclaude.dinoscript.png
-test -s /usr/share/dinoscript/Dinoscript-with-Pip.pdf
+for workbook in Dinoscript-with-Pip.pdf Dinoscript-con-Pip.pdf Dinoscript-z-Pip.pdf; do
+  test -s "/usr/share/dinoscript/$workbook"
+done
 
 scratch=$(mktemp -d)
 display_pid=

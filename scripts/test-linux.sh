@@ -136,5 +136,8 @@ test ! -e /usr/share/icons/hicolor/512x512/apps/com.nodwyn.app.png
 test ! -e /usr/share/applications/com.fclaude.dinoscript.desktop
 test ! -e /usr/share/icons/hicolor/128x128/apps/com.fclaude.dinoscript.png
 test ! -e /usr/share/icons/hicolor/512x512@2/apps/com.fclaude.dinoscript.png
-test ! -e /usr/share/dinoscript/Dinoscript-with-Pip.pdf
+for workbook in Dinoscript-with-Pip.pdf Dinoscript-con-Pip.pdf Dinoscript-z-Pip.pdf
+do
+  test ! -e "/usr/share/dinoscript/${workbook}"
+done
 echo "Install, functional checks, and uninstall passed: ${format} ${arch}"

@@ -122,8 +122,7 @@ jobs:
           done
           plutil -lint "$app/Contents/Info.plist"
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")" = com.fclaude.dinoscript
-          # The upstream v0.5.1 disk images retain the 0.5.0 bundle version.
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.5.0
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = 0.7.0
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' "$app/Contents/Info.plist")" = Dinoscript.icns
           test -s "$app/Contents/Resources/Dinoscript.icns"
           lipo "$app/Contents/MacOS/Dinoscript" -verify_arch "$(uname -m)"

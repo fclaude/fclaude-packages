@@ -44,6 +44,10 @@ contents:
     dst: /usr/share/icons/hicolor/512x512@2/apps/com.fclaude.dinoscript.png
   - src: ${DINOSCRIPT_SOURCE}/book/Dinoscript-with-Pip.pdf
     dst: /usr/share/dinoscript/Dinoscript-with-Pip.pdf
+  - src: ${DINOSCRIPT_SOURCE}/book/Dinoscript-con-Pip.pdf
+    dst: /usr/share/dinoscript/Dinoscript-con-Pip.pdf
+  - src: ${DINOSCRIPT_SOURCE}/book/Dinoscript-z-Pip.pdf
+    dst: /usr/share/dinoscript/Dinoscript-z-Pip.pdf
   - src: ${DINOSCRIPT_SOURCE}/LICENSE
     dst: /usr/share/doc/dinoscript/copyright
     packager: deb

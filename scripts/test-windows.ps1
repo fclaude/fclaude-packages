@@ -16,7 +16,7 @@ try {
         if(!(Test-Path "$dir\LICENSE")){throw "Missing license: $name"}
         foreach($bin in @($m.bin)){if(!(Test-Path (Join-Path $dir $bin))){throw "Missing executable: $bin"}}
         if($name -eq 'dinoscript') {
-            foreach($file in @('NOTICE','THIRD-PARTY-NOTICES.txt','Dinoscript-with-Pip.pdf')) {
+            foreach($file in @('NOTICE','THIRD-PARTY-NOTICES.txt','Dinoscript-with-Pip.pdf','Dinoscript-con-Pip.pdf','Dinoscript-z-Pip.pdf')) {
                 if(!(Test-Path (Join-Path $dir $file))){throw "Missing Dinoscript file: $file"}
             }
             $stream=[IO.File]::OpenRead((Join-Path $dir 'Dinoscript.exe'))

@@ -1,9 +1,9 @@
 cask "dinoscript" do
   arch arm: "arm64", intel: "amd64"
 
-  version "0.5.1"
-  sha256 arm:   "8e1b76490227bcdebbd1cf80d98f8afccc1d639d0736482eee61dcb05ab73fb6",
-         intel: "b932906e35b234a72adcb514c262c1e9b14cee4ed9aa5b6471110cf1f9e9ca12"
+  version "0.7.0"
+  sha256 arm:   "1fb41bc51bc10b207962cddfe69e7a971b98c18e512cb86ba5009baf8bb877c3",
+         intel: "bc53ed3a98c31665bcf77a649fdf50cac2de2ed087e107abc4313737c728dfec"
 
   url "https://github.com/fclaude/dinoscript/releases/download/v#{version}/Dinoscript-#{arch}.dmg"
   name "Dinoscript"
